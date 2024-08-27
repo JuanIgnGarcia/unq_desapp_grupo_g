@@ -7,7 +7,7 @@ on:
 
 jobs:
   demo:
-    runs-on: ubuntu-lastest
+    runs-on: ubuntu-latest
     steps:
       - name: Echo Test
         run: echo "Test"
