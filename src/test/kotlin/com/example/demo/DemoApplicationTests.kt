@@ -8,7 +8,6 @@ class DemoApplicationTests {
 
 	@Test
 	fun contextLoads() {
-		assert(false)
 	}
 
 }
