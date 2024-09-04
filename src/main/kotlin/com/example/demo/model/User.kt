@@ -1,11 +1,11 @@
-package model
+package com.example.demo.model
 
 import jakarta.persistence.*
 import java.util.regex.Pattern
 
 @Entity
 @Table(name = "user_table")
-class User {
+class User() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ class User {
     @Column
     var point : Int = 0
 
-    constructor(nameU: String, lastNameU: String, emailU: String,  addressU: String , passwordU: String, cvuMP: String, cryptoAddU : String){
+    constructor(nameU: String, lastNameU: String, emailU: String,  addressU: String , passwordU: String, cvuMP: String, cryptoAddU : String) : this() {
         this.name = nameU
         this.lastName = lastNameU
         this.email = emailU
