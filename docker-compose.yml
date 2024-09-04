@@ -10,7 +10,7 @@ services:
     networks:
       - sonarnet
     environment:
-      - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonar
+      - SONARQUBE_JDBC_URL=jdbc:postgresql://dbSonar:5432/sonar
       - SONARQUBE_JDBC_USERNAME=sonar
       - SONARQUBE_JDBC_PASSWORD=sonar
     volumes:
@@ -18,7 +18,8 @@ services:
       - sonarqube_dataa:/opt/sonarqube/data
       - sonarqube_extensionss:/opt/sonarqube/extensions
       - sonarqube_bundled-pluginss:/opt/sonarqube/lib/bundled-plugins
-  db:
+
+  dbSonar:
     image: postgres
     networks:
       - sonarnet
@@ -28,6 +29,24 @@ services:
     volumes:
       - postgresqll:/var/lib/postgresql
       - postgresql_dataa:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5433:5432"
+
+
+  cryptoBase:
+    image: postgres
+    networks:
+      - sonarnet
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=cryptoBase
+    volumes:
+      - cryptoBase_postgresqll:/var/lib/postgresql
+      - cryptoBase_postgresql_dataa:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
 
 networks:
   sonarnet:
@@ -39,3 +58,5 @@ volumes:
   sonarqube_bundled-pluginss:
   postgresqll:
   postgresql_dataa:
+  cryptoBase_postgresqll:
+  cryptoBase_postgresql_dataa:
