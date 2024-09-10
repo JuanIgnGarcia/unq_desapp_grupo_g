@@ -36,13 +36,14 @@ class User() {
         this.cvuMercadoPago = cvuMP
         this.cryptoAddress = cryptoAddU
 
-        require(name?.length in 3..30) { "El nombre debe tener entre 3 y 30 caracteres." }
-        require(lastName?.length in 3..30) { "El apellido debe tener entre 3 y 30 caracteres." }
-        require(isValidEmail(email)) { "El formato del email no es válido." }
-        require(address?.length in 10..30) { "La dirección debe tener entre 10 y 30 caracteres." }
-        require(isValidPassword(password)) { "La contraseña debe tener al menos 1 minúscula, 1 mayúscula, 1 carácter especial y tener una longitud mínima de 6 caracteres." }
-        require(cvuMercadoPago?.length == 22) { "El CVU de MercadoPago debe tener 22 dígitos." }
-        require(cryptoAddress?.length == 8) { "La dirección de la billetera de criptoactivos debe tener 8 dígitos." }
+        require(name?.length in 3..30) { "The name must be between 3 and 30 characters long." }
+        require(lastName?.length in 3..30) { "The last name must be between 3 and 30 characters long." }
+        require(isValidEmail(email)) { "The email format is not valid." }
+        require(address?.length in 10..30) { "The address must be between 10 and 30 characters long." }
+        require(isValidPassword(password)) { "The password must have at least 1 lowercase letter, 1 uppercase letter, 1 special character, and be at least 6 characters long." }
+        require(cvuMercadoPago?.length == 22) { "The MercadoPago CVU must be 22 digits long." }
+        require(cryptoAddress?.length == 8) { "The crypto wallet address must be 8 digits long." }
+
     }
 
     private fun isValidEmail(email: String?): Boolean {
