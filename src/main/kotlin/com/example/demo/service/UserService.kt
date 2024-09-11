@@ -1,5 +1,6 @@
 package com.example.demo.service
 
+import com.example.demo.Exceptions.UserCreationException
 import com.example.demo.model.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -12,8 +13,13 @@ class UserService {
     lateinit var repo : UserRepository
 
     fun createUser(user : User): User {
-        repo.save(user)
-        return user
+        try {
+            repo.save(user)
+            return user
+        }catch (e: Exception) {
+            throw UserCreationException("Failed to create user: ")
+        }
+
     }
 
     fun allUsers(): List<User>{
