@@ -36,7 +36,8 @@ services:
   cryptoBase:
     image: postgres
     networks:
-      - sonarnet
+      - cryptonet
+    restart: always
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=root
@@ -50,6 +51,7 @@ services:
 
 networks:
   sonarnet:
+  cryptonet:
 
 volumes:
   sonarqube_conff:
