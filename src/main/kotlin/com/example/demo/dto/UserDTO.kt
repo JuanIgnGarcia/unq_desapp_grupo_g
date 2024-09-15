@@ -1,4 +1,4 @@
 package com.example.demo.dto
 
-class UserDTO (val nameUser: String,val points :Int) {
+class UserDTO (val nameUser: String,val lastName: String,val points :Int) {
 }

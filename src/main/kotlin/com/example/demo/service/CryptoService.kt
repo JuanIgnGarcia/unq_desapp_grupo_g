@@ -2,6 +2,7 @@ package com.example.demo.service
 
 import com.example.demo.Exceptions.CryptoNotFoundException
 import com.example.demo.model.CryptoPrice
+import com.example.demo.model.CryptoSymbolHelper
 import com.example.demo.service.Proxys.ProxyBinance
 import org.springframework.stereotype.Service
 
@@ -10,16 +11,10 @@ class CryptoService {
 
     private val proxyBinance = ProxyBinance()
 
-    private val cryptosNames: List<String> = listOf(
-        "ALICEUSDT", "MATICUSDT", "AXSUSDT", "AAVEUSDT", "ATOMUSDT",
-        "NEOUSDT", "DOTUSDT", "ETHUSDT", "CAKEUSDT", "BTCUSDT",
-        "BNBUSDT", "ADAUSDT", "TRXUSDT", "AUDIOUSDT"
-    )
-
     fun allCryptos(): List<CryptoPrice> {
         try {
-
-            val cryptoPrices = proxyBinance.cryptosPrices(cryptosNames)
+            val cryptoSymbols = CryptoSymbolHelper.cryptoSymbols()
+            val cryptoPrices = proxyBinance.cryptosPrices(cryptoSymbols)
             return cryptoPrices
 
         }catch (e: Exception) {
@@ -28,13 +23,15 @@ class CryptoService {
 
     }
 
-    fun getCrypto(cryptoName: String) : CryptoPrice {
+    fun getCrypto(cryptoSymbol: String) : CryptoPrice {
+
         try {
-            val cryptoPrices = proxyBinance.cryptosPrices(cryptosNames)
+            CryptoSymbolHelper.validateCriptoSymbol(cryptoSymbol)
+            val cryptoPrices = proxyBinance.cryptosPrices(listOf(cryptoSymbol))
             return cryptoPrices.first()
 
         }catch (e: Exception) {
-            throw CryptoNotFoundException("Error fetching price for $cryptoName: ${e.message}")
+            throw CryptoNotFoundException("Error fetching price for $cryptoSymbol: ${e.message}")
         }
     }
 

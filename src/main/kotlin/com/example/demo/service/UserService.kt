@@ -17,9 +17,8 @@ class UserService {
             repo.save(user)
             return user
         }catch (e: Exception) {
-            throw UserCreationException("Failed to create user: ")
+            throw UserCreationException("Failed to create user: ${e.message}")
         }
-
     }
 
     fun allUsers(): List<User>{

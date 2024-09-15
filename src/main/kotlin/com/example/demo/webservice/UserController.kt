@@ -29,12 +29,13 @@ class UserController {
             .point(0)
             .build()
         service.createUser(user)
-        val userDTO = UserDTO(user.name!!, user.point)
+        val userDTO = UserDTO(user.name!!,user.lastName!!, user.point)
         return ResponseEntity(userDTO, HttpStatus.CREATED)
     }
 
     @GetMapping("/users")
-    fun getUsers(): List<User> {
-        return service.allUsers()
+    fun getUsers(): List<UserDTO> {
+        val users = service.allUsers().map { currentUser: User -> UserDTO(currentUser.name!!,currentUser.lastName!!,currentUser.point) }
+        return users
     }
 }
