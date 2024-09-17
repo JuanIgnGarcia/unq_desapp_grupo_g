@@ -1,4 +1,4 @@
-package com.example.demo.Exceptions
+package com.example.demo.exceptions
 
 class OfferTypeException (message: String) : RuntimeException(message){
 }

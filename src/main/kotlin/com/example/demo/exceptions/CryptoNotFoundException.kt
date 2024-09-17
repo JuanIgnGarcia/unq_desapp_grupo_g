@@ -1,3 +1,3 @@
-package com.example.demo.Exceptions
+package com.example.demo.exceptions
 
 class CryptoNotFoundException(message: String) : RuntimeException(message)

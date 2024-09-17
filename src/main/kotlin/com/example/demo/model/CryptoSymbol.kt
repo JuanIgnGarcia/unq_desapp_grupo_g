@@ -1,6 +1,6 @@
 package com.example.demo.model
 
-import com.example.demo.Exceptions.CryptoNotFoundException
+import com.example.demo.exceptions.CryptoNotFoundException
 
 
 enum class CryptoSymbol {

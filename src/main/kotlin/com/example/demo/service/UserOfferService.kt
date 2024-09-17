@@ -1,6 +1,6 @@
 package com.example.demo.service
 
-import com.example.demo.Exceptions.UserCreationException
+import com.example.demo.exceptions.UserCreationException
 import com.example.demo.model.UserOffer
 import com.example.demo.repository.UserOfferRepository
 import org.springframework.beans.factory.annotation.Autowired
