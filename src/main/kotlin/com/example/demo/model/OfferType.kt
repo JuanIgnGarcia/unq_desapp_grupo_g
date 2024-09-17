@@ -1,6 +1,6 @@
 package com.example.demo.model
 
-import com.example.demo.Exceptions.OfferTypeException
+import com.example.demo.exceptions.OfferTypeException
 
 enum class OfferType {
     BUY,

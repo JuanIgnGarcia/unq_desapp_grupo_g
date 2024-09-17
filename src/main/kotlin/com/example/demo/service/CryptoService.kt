@@ -1,6 +1,6 @@
 package com.example.demo.service
 
-import com.example.demo.Exceptions.CryptoNotFoundException
+import com.example.demo.exceptions.CryptoNotFoundException
 import com.example.demo.model.CryptoPrice
 import com.example.demo.model.CryptoSymbolHelper
 import com.example.demo.service.Proxys.ProxyBinance
