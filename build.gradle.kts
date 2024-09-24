@@ -71,6 +71,6 @@ sonar {
 	properties {
 		property("sonar.host.url", "https://sonarcloud.io/")
 		property("sonar.organization", "juanigngarcia")
-		property("sonar.projectKey", "unq_desapp_grupo_g")
+		property("sonar.projectKey", "JuanIgnGarcia_unq_desapp_grupo_g")
 	}
 }
