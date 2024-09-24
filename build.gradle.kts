@@ -6,6 +6,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.6"
 	kotlin("plugin.jpa") version "1.9.25"
 	id("org.sonarqube") version "5.1.0.4882"
+	id("jacoco")
 }
 
 group = "com.example"
@@ -54,4 +55,11 @@ kotlin {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks.jacocoTestReport {
+	reports {
+		xml.required.set(true)
+		html.required.set(true)
+	}
 }
