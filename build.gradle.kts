@@ -66,3 +66,11 @@ tasks.jacocoTestReport {
 		xml.required.set(true)
 	}
 }
+
+sonar {
+	properties {
+		property("sonar.host.url", "https://sonarcloud.io/")
+		property("sonar.organization", "juanigngarcia")
+		property("sonar.projectKey", "unq_desapp_grupo_g")
+	}
+}
