@@ -67,6 +67,7 @@ tasks.jacocoTestReport {
 	}
 }
 
+
 sonar {
 	properties {
 		property("sonar.host.url", "https://sonarcloud.io/")
