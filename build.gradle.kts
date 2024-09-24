@@ -57,9 +57,12 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 
+jacoco {
+	toolVersion = "0.8.8"
+}
+
 tasks.jacocoTestReport {
 	reports {
 		xml.required.set(true)
-		html.required.set(true)
 	}
 }
