@@ -25,4 +25,8 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
       - name: Build with Gradle
-        run: ./gradlew build jacocoTestReport
+        env:
+          SONAR_TOKEN: b2cca84e532a929cf7d3cf36754ecd842ba05caa
+        run: |
+          ./gradlew build sonar --info
+          ./gradlew build jacocoTestReport sonar --info
