@@ -1,3 +1,10 @@
+// versions
+val SWAGGER_VERSION = "3.0.0"
+val SWAGGER_SPRINGDOC_OPENAPI = "2.3.0"
+
+val SPRINGDOC_OPENAPI= "2.0.3"
+
+
 plugins {
 	kotlin("jvm") version "1.9.25"
 	kotlin("plugin.spring") version "1.9.25"
@@ -28,23 +35,21 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	//implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("org.postgresql:postgresql")
-	//providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testImplementation("org.springframework.security:spring-security-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.3")
 
 	// swagger
-	implementation("io.springfox:springfox-swagger2:3.0.0")
-	implementation("io.springfox:springfox-swagger-ui:3.0.0")
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$SPRINGDOC_OPENAPI")
+	implementation("io.springfox:springfox-swagger2:$SWAGGER_VERSION")
+	implementation("io.springfox:springfox-swagger-ui:$SWAGGER_VERSION")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$SWAGGER_SPRINGDOC_OPENAPI")
 }
 
 kotlin {
