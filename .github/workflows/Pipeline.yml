@@ -25,4 +25,6 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
       - name: Build with Gradle
-        run: ./gradlew build jacocoTestReport
+        run: ./gradlew build
+      - name: Sonar Coverage
+        run: ./gradlew test jacocoTestReport sonarqube --info
