@@ -42,6 +42,14 @@ dependencies {
 	implementation("io.springfox:springfox-swagger2:$SWAGGER_VERSION")
 	implementation("io.springfox:springfox-swagger-ui:$SWAGGER_VERSION")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$SWAGGER_SPRINGDOC_OPENAPI")
+	implementation ("com.squareup.okhttp3:logging-interceptor:4.9.2")
+	implementation ("com.squareup.okhttp3:okhttp:4.9.3")
+	implementation ("com.squareup.okhttp3:logging-interceptor:4.9.2")
+	implementation ("com.squareup.okhttp3:okhttp:4.9.3")
+	implementation ("com.google.code.gson:gson:2.8.9")
+
+
+
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
