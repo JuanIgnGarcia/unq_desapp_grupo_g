@@ -5,6 +5,7 @@ import com.example.demo.model.OfferTypeHelper
 import com.example.demo.model.UserOffer
 import com.example.demo.request.UserOfferRequest
 import com.example.demo.service.UserOfferService
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -21,6 +22,7 @@ class UserOfferController {
     @Autowired
     lateinit var service: UserOfferService
 
+    @Operation(summary = "Publish a new offer")
     @PostMapping("/Offer")
     fun publishOffer (@RequestBody userOfferRequest: UserOfferRequest): ResponseEntity<UserOfferDTO> {
         val userOffer =
@@ -50,6 +52,7 @@ class UserOfferController {
         return ResponseEntity(userOfferDTO, HttpStatus.CREATED)
     }
 
+    @Operation(summary = "Get all user offers")
     @GetMapping("/offers")
     fun allUserOffers(): List<UserOfferDTO> {
         val usersOffers = service.allOffers().map {

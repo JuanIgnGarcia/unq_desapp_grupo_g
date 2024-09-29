@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import com.example.demo.request.UserRequest
 import com.example.demo.service.UserService
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -15,6 +16,7 @@ class UserController {
     @Autowired
     lateinit var service: UserService
 
+    @Operation(summary = "Register a new user")
     @PostMapping("/register")
     fun saveUser(@RequestBody userRequest: UserRequest): ResponseEntity<UserDTO> {
         val user =
@@ -33,6 +35,7 @@ class UserController {
         return ResponseEntity(userDTO, HttpStatus.CREATED)
     }
 
+    @Operation(summary = "Get all users")
     @GetMapping("/users")
     fun getUsers(): List<UserDTO> {
         val users = service.allUsers().map { currentUser: User -> UserDTO(currentUser.name!!,currentUser.lastName!!,currentUser.point) }
