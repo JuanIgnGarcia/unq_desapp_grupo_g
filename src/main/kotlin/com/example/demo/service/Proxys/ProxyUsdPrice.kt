@@ -1,5 +1,6 @@
 package com.example.demo.service.Proxys
 
+import com.example.demo.model.CryptoPrice
 import com.example.demo.model.UsdPrice
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -26,6 +27,9 @@ class ProxyUsdPrice {
         val listType = object : TypeToken<List<UsdPrice>>() {}.type
         val listaUsdPrices: List<UsdPrice> = gson.fromJson(responseData, listType)
         return (listaUsdPrices.last())
+    }
 
+    fun convertUSDPrice(cryptoPrice: Double) : Double{
+        return this.lastUsdPrice().v * cryptoPrice
     }
 }

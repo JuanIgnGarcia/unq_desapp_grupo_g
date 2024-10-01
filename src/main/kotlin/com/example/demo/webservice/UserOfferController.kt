@@ -4,6 +4,7 @@ import com.example.demo.dto.UserOfferDTO
 import com.example.demo.model.OfferTypeHelper
 import com.example.demo.model.UserOffer
 import com.example.demo.request.UserOfferRequest
+import com.example.demo.service.Proxys.ProxyUsdPrice
 import com.example.demo.service.UserOfferService
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,6 +22,7 @@ class UserOfferController {
 
     @Autowired
     lateinit var service: UserOfferService
+    val proxyUsdPrice = ProxyUsdPrice()
 
     @Operation(summary = "Publish a new offer")
     @PostMapping("/Offer")
@@ -30,7 +32,7 @@ class UserOfferController {
                 .cryptoSymbol(userOfferRequest.cryptoSymbol)
                 .cryptoMounts(userOfferRequest.cryptoMounts)
                 .cryptoPrice(userOfferRequest.cryptoPrice)
-                .argsMounts(userOfferRequest.argsMounts)
+                .argsMounts(proxyUsdPrice.convertUSDPrice(userOfferRequest.cryptoPrice))
                 .userName(userOfferRequest.userName)
                 .userLastName(userOfferRequest.userLastName)
                 .offerDate(Date())

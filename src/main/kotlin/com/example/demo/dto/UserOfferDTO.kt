@@ -1,9 +1,9 @@
 package com.example.demo.dto
 
 class UserOfferDTO(val cryptoSymbol: String,
-                   val cryptoMounts: Float,
-                   val cryptoPrice:  Float,
-                   val argsMounts:   Float,
+                   val cryptoMounts: Double,
+                   val cryptoPrice:  Double,
+                   val argsMounts:   Double,
                    val userName:     String,
                    val userLastName: String,
                    val offerDate:    String,

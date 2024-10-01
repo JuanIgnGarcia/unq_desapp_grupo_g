@@ -1,7 +1,10 @@
 package com.example.demo.model
 
+import com.example.demo.service.CryptoService
+import com.example.demo.service.Proxys.ProxyUsdPrice
 import jakarta.persistence.*
 import java.util.Date
+import kotlin.math.abs
 
 @Entity
 @Table(name = "userOffer_table")
@@ -13,11 +16,11 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
     @Column
     var cryptoSymbol: String? = builder.cryptoSymbol
     @Column
-    var cryptoMounts: Float? = builder.cryptoMounts
+    var cryptoMounts: Double? = builder.cryptoMounts
     @Column
-    var cryptoPrice: Float? = builder.cryptoPrice
+    var cryptoPrice: Double? = builder.cryptoPrice
     @Column
-    var argsMounts: Float? = builder.argsMounts
+    var argsMounts: Double? = builder.argsMounts
     @Column
     var userName: String? = builder.userName
     @Column
@@ -30,11 +33,11 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
     class UserOfferBuilder {
         var cryptoSymbol: String? = null
             private set
-        var cryptoMounts: Float? = null
+        var cryptoMounts: Double? = null
             private set
-        var cryptoPrice: Float? = null
+        var cryptoPrice: Double? = null
             private set
-        var argsMounts: Float? = null
+        var argsMounts: Double? = null
             private set
         var userName: String? = null
             private set
@@ -50,16 +53,16 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
             this.cryptoSymbol = cryptoSymbol
         }
 
-        fun cryptoMounts(cryptoMounts: Float) = apply {
+        fun cryptoMounts(cryptoMounts: Double) = apply {
             this.cryptoMounts = cryptoMounts
         }
 
-        fun cryptoPrice(cryptoPrice: Float) = apply {
+        fun cryptoPrice(cryptoPrice: Double) = apply {
             require(isValidCryptoPrice(cryptoPrice)) { "The crypto price not valid." }
             this.cryptoPrice = cryptoPrice
         }
 
-        fun argsMounts(argsMounts: Float) = apply {
+        fun argsMounts(argsMounts: Double) = apply {
             this.argsMounts = argsMounts
         }
 
@@ -83,8 +86,15 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
             return UserOffer(this)
         }
 
-        private fun isValidCryptoPrice(cryptoPrice: Float?): Boolean {
-            return true // Buscarla en cache
+        private fun percentageDifference(p1 : Double, p2 : Double) : Double {
+            val diferencia = abs(p1 - p2)
+            val promedio = (p1 + p2) / 2
+            return (diferencia / promedio) * 100
+        }
+        private fun isValidCryptoPrice(cryptoPrice: Double): Boolean {
+            val lastCryptoValue = CryptoService().getCrypto(cryptoSymbol!!).price.toDouble()
+            return percentageDifference(cryptoPrice, lastCryptoValue) <= 5
+
         }
 
     }

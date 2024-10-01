@@ -30,5 +30,4 @@ class CryptoController {
         val cryptoPrice = service.getCrypto(upperCaseName)
         return ResponseEntity.ok(cryptoPrice)
     }
-
 }
