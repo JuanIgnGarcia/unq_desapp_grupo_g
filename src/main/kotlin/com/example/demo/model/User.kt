@@ -21,11 +21,13 @@ class User private constructor(builder: UserBuilder) {
     @Column
     var password: String? = builder.password
     @Column
-    var cvuMercadoPago: String? = builder.cvuMercadoPago
+    val cvuMercadoPago: String? = builder.cvuMercadoPago
     @Column
-    var cryptoAddress: String? = builder.cryptoAddress
+    val cryptoAddress: String? = builder.cryptoAddress
     @Column
-    var point: Int = builder.point ?: 0
+    val point: Int = builder.point ?: 0
+    @Column
+    val mountCompletedTransactions: Int = builder.mountCompletedTransactions ?: 0
 
 
     class UserBuilder {
@@ -44,6 +46,8 @@ class User private constructor(builder: UserBuilder) {
         var cryptoAddress: String? = null
             private set
         var point: Int? = null
+            private set
+        var mountCompletedTransactions: Int? = null
             private set
 
         fun name(name: String) = apply {
@@ -81,7 +85,15 @@ class User private constructor(builder: UserBuilder) {
             this.cryptoAddress = cryptoAddress
         }
 
-        fun point(point: Int) = apply { this.point = point }
+        fun point(point: Int) = apply {
+            require(point >= 0) { "Points cannot be negative." }
+            this.point = point
+        }
+
+        fun mountCompletedTransactions(mountCompletedTransactions: Int) = apply {
+            require(mountCompletedTransactions >= 0) { "Completed transactions cannot be negative." }
+            this.mountCompletedTransactions = mountCompletedTransactions
+        }
 
         fun build(): User {
             return User(this)
@@ -99,4 +111,17 @@ class User private constructor(builder: UserBuilder) {
             return pattern.matcher(password).matches()
         }
     }
+
+    fun userName() : String = this.name!!
+
+    fun userLastName(): String = this.lastName!!
+
+    override fun equals(other: Any?): Boolean {
+        return (other is User) && (this.id == other.id)
+    }
+
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
+    }
+
 }

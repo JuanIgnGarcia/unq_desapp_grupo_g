@@ -1,5 +1,7 @@
 package com.example.demo.model
 
+
+//import com.example.demo.exceptions.CryptoNotFoundException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -20,14 +22,22 @@ class UserOfferTest {
         userOffer.cryptoSymbol("AUDIOUSDT")
         assertEquals("AUDIOUSDT",userOffer.cryptoSymbol)
     }
-
+/*
+    @Test
+    fun `should throw exception for invalid crypto symbol `() {
+        val exception = assertThrows<CryptoNotFoundException> {  // CryptoNotFoundException
+            UserOffer.UserOfferBuilder().cryptoSymbol("EE")
+        }
+        assertEquals("Crypto symbol EE is not valid.", exception.message)
+    }
+*/
     @Test
     fun `I create a useroffer and the nominal value is correct`() {
         val userOffer = UserOffer.UserOfferBuilder()
         //userOffer.cryptoMounts(3.343323)
 
     }
-
+  /* USAR DUMMYS
     @Test
     fun `I created a useroffer and the crypto price is correct`() {
         val userOffer = UserOffer.UserOfferBuilder()
@@ -46,7 +56,7 @@ class UserOfferTest {
         assertEquals("The crypto price not valid.", exception.message)
     }
 
-
+  */
 
 
 

@@ -29,16 +29,17 @@ class UserController {
             .cvuMercadoPago(userRequest.cvuMercadoPago)
             .cryptoAddress(userRequest.cryptoAddress)
             .point(0)
+            .mountCompletedTransactions(0)
             .build()
         service.createUser(user)
-        val userDTO = UserDTO(user.name!!,user.lastName!!, user.point)
+        val userDTO = UserDTO(user.id.toString(),user.name!!,user.lastName!!, user.point)
         return ResponseEntity(userDTO, HttpStatus.CREATED)
     }
 
     @Operation(summary = "Get all users")
     @GetMapping("/users")
     fun getUsers(): List<UserDTO> {
-        val users = service.allUsers().map { currentUser: User -> UserDTO(currentUser.name!!,currentUser.lastName!!,currentUser.point) }
+        val users = service.allUsers().map { currentUser: User -> UserDTO(currentUser.id.toString(),currentUser.name!!,currentUser.lastName!!,currentUser.point) }
         return users
     }
 }

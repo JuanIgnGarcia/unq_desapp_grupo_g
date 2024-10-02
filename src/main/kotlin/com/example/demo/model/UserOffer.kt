@@ -1,7 +1,6 @@
 package com.example.demo.model
 
 import com.example.demo.service.CryptoService
-import com.example.demo.service.Proxys.ProxyUsdPrice
 import jakarta.persistence.*
 import java.util.Date
 import kotlin.math.abs
@@ -21,10 +20,9 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
     var cryptoPrice: Double? = builder.cryptoPrice
     @Column
     var argsMounts: Double? = builder.argsMounts
-    @Column
-    var userName: String? = builder.userName
-    @Column
-    var userLastName: String? = builder.userLastName
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    var user: User? = builder.user
     @Column
     var offerDate: Date? = builder.offerDate
     @Column
@@ -39,14 +37,14 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
             private set
         var argsMounts: Double? = null
             private set
-        var userName: String? = null
-            private set
-        var userLastName: String? = null
+        var user: User? = null
             private set
         var offerDate: Date? = null
             private set
         var offerType: OfferType? = null
             private set
+        // estado disponible / no disponible
+
 
         fun cryptoSymbol(cryptoSymbol: String) = apply {
             CryptoSymbolHelper.validateCriptoSymbol(cryptoSymbol)
@@ -66,12 +64,8 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
             this.argsMounts = argsMounts
         }
 
-        fun userName(userName: String) = apply {
-            this.userName = userName
-        }
-
-        fun userLastName(userLastName: String) = apply {
-            this.userLastName = userLastName
+        fun user(user: User) = apply {
+            this.user = user
         }
 
         fun offerDate(offerDate: Date) = apply {
@@ -86,17 +80,22 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
             return UserOffer(this)
         }
 
-        private fun percentageDifference(p1 : Double, p2 : Double) : Double {
-            val diferencia = abs(p1 - p2)
-            val promedio = (p1 + p2) / 2
-            return (diferencia / promedio) * 100
+        private fun percentageDifference(price1 : Double, price2 : Double) : Boolean {
+            val difference  = abs(price1 - price2)
+            val allowedMargin = price1 * 0.05
+            return difference <= allowedMargin
         }
+
         private fun isValidCryptoPrice(cryptoPrice: Double): Boolean {
             val lastCryptoValue = CryptoService().getCrypto(cryptoSymbol!!).price.toDouble()
-            return percentageDifference(cryptoPrice, lastCryptoValue) <= 5
-
+            return percentageDifference(cryptoPrice,lastCryptoValue)
         }
-
     }
+
+    fun userName() : String {  return this.user!!.userName() }
+
+    fun userLastName(): String { return this.user!!.userLastName() }
+
+    fun user(): User? { return this.user }
 
 }

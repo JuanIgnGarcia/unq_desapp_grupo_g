@@ -193,4 +193,36 @@ class UserTest {
         assertEquals("The crypto wallet address must be 8 digits long.", exception.message)
     }
 
+    @Test
+    fun `should create a user with positive points`() {
+        val user = User.UserBuilder().point(1)
+
+        assertNotNull(user)
+        assertEquals(1, user.point)
+    }
+
+    @Test
+    fun `should create a user with negative points`() {
+        val exception = assertThrows<IllegalArgumentException> {
+            User.UserBuilder().point(-1)
+        }
+        assertEquals("Points cannot be negative.", exception.message)
+    }
+
+    @Test
+    fun `should create a user with positive mountCompletedTransactions`() {
+        val user = User.UserBuilder().mountCompletedTransactions(1)
+
+        assertNotNull(user)
+        assertEquals(1, user.mountCompletedTransactions)
+    }
+
+    @Test
+    fun `should create a user with negative mountCompletedTransactions`() {
+        val exception = assertThrows<IllegalArgumentException> {
+            User.UserBuilder().mountCompletedTransactions(-1)
+        }
+        assertEquals("Completed transactions cannot be negative.", exception.message)
+    }
+
 }

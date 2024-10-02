@@ -35,7 +35,7 @@ class Transaction(builder: TransactionBuilder) {
             private set
 
         fun offer(offer: UserOffer) = apply {
-            //  comprobar que la oferta este abierta (no iniciada, cerrada o cancelada)
+            //  comprobar que la oferta este abierta (no iniciada, cerrada)
             //require(isAOpenOffer(offer)) { "the offer is not open." }
             this.offer = offer
         }
@@ -46,8 +46,9 @@ class Transaction(builder: TransactionBuilder) {
         }
 
         private fun isADiferentUser(bidderUser: User): Boolean {
-            return bidderUser.name != offer?.userName  &&  bidderUser.lastName != offer?.userLastName // mirar seguro da un error porque pide offer
-            // return bidderUser.email != offer.user.email   // lo que es unico entre usuario es el email
+            return this.offer!!.user() == bidderUser
+            //return bidderUser.name != offer?.userName  &&  bidderUser.lastName != offer?.userLastName // mirar seguro da un error porque pide offer
+            // return bidderUser.email != offer.user.email   // lo que es unico entre usuario es el email  --> implementar equals en User
         }
 
     }
@@ -57,7 +58,7 @@ class Transaction(builder: TransactionBuilder) {
         // cambiar el estadod de la oferta a disponible (Abierto/Open)
         // guardar la Transaction en a la persona que cancelo la Transaction
         // restar el puntaje en la reputacion a la persona que cancelo la Transaction
-        // dar un mensaje que se cancelo exitosamente la Transaction
+        // dar un mensaje que se cancelo exitosamente la Transaction (servicio)
     }
     */
 
