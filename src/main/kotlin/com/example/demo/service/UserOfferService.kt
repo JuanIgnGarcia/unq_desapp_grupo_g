@@ -2,6 +2,7 @@ package com.example.demo.service
 
 //import com.example.demo.exceptions.UserNotFoundException
 //import com.example.demo.exceptions.UserOfferCreationException
+import com.example.demo.model.OfferStatus
 import com.example.demo.model.OfferTypeHelper
 import com.example.demo.model.UserOffer
 import com.example.demo.repository.UserOfferRepository
@@ -55,6 +56,7 @@ class UserOfferService {
                 .user(user)
                 .offerDate(Date())
                 .offerType(OfferTypeHelper.transform(userOfferRequest.offerType))
+                .offerStatus(OfferStatus.AVAILABLE)
                 .build()
         return newUserOffer
     }
@@ -65,7 +67,7 @@ class UserOfferService {
     }
 
     fun allOffersFrom(userId: Long): List<UserOffer> {
-        return userOfferRepository.findAllByUserId(userId) // mirar 
+        return userOfferRepository.findAllByUserIdAndOfferStatus(userId,OfferStatus.AVAILABLE)
     }
 
 }

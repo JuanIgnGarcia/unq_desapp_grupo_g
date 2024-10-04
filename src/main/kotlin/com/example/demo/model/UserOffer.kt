@@ -27,6 +27,8 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
     var offerDate: Date? = builder.offerDate
     @Column
     var offerType: OfferType? = builder.offerType
+    @Column
+    var offerStatus : OfferStatus? = builder.offerStatus
 
     class UserOfferBuilder {
         var cryptoSymbol: String? = null
@@ -43,7 +45,8 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
             private set
         var offerType: OfferType? = null
             private set
-        // estado disponible / no disponible
+        var offerStatus: OfferStatus? = null
+            private set
 
 
         fun cryptoSymbol(cryptoSymbol: String) = apply {
@@ -74,6 +77,10 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
 
         fun offerType(offerType: OfferType) = apply {
             this.offerType = offerType
+        }
+
+        fun offerStatus(offerStatus: OfferStatus) = apply {
+            this.offerStatus = offerStatus
         }
 
         fun build(): UserOffer {
