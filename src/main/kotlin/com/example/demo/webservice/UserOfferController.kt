@@ -8,10 +8,7 @@ import io.swagger.v3.oas.annotations.Operation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 
 @RestController
@@ -53,6 +50,23 @@ class UserOfferController {
                     currentOfferUser.userLastName(),
                     currentOfferUser.offerDate!!.toString(),
                     currentOfferUser.offerType!!.name) }
+        return usersOffers
+    }
+
+    @Operation(summary = "Get all user offers from User")
+    @GetMapping("/offers/{userId}")
+    fun allUserOffersFromAUser(@PathVariable userId: Long): List<UserOfferDTO> {
+        val usersOffers = service.allOffersFrom(userId).map {
+                currentOfferUser: UserOffer ->
+            UserOfferDTO(
+                currentOfferUser.cryptoSymbol!!,
+                currentOfferUser.cryptoMounts!!,
+                currentOfferUser.cryptoPrice!!,
+                currentOfferUser.argsMounts!!,
+                currentOfferUser.userName(),
+                currentOfferUser.userLastName(),
+                currentOfferUser.offerDate!!.toString(),
+                currentOfferUser.offerType!!.name) }
         return usersOffers
     }
 

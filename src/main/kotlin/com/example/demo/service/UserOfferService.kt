@@ -18,6 +18,7 @@ class UserOfferService {
 
     @Autowired
     lateinit var userOfferRepository : UserOfferRepository
+    @Autowired
     lateinit var userRepository : UserRepository
     var proxyUsdPrice = ProxyUsdPrice()
 
@@ -27,7 +28,7 @@ class UserOfferService {
             userOfferRepository.save(userOffer)
             return userOffer
         }catch (e: Exception) {
-            throw TimeoutException("user with id ${userOfferRequest.userId} dont exist") //UserOfferCreationException("Failed to create user: ${e.message}")
+            throw TimeoutException("Failed to create user: ${e.message}") //UserOfferCreationException("Failed to create user: ${e.message}")
         }
     }
 
@@ -49,8 +50,8 @@ class UserOfferService {
             UserOffer.UserOfferBuilder()
                 .cryptoSymbol(userOfferRequest.cryptoSymbol)
                 .cryptoMounts(userOfferRequest.cryptoMounts)
-                .cryptoPrice(totalArgsMounts)
-                .argsMounts(userOfferRequest.cryptoMounts)
+                .cryptoPrice(userOfferRequest.cryptoPrice)
+                .argsMounts(totalArgsMounts)
                 .user(user)
                 .offerDate(Date())
                 .offerType(OfferTypeHelper.transform(userOfferRequest.offerType))
@@ -61,6 +62,10 @@ class UserOfferService {
     private fun calculateThePriceInPesos(cryptoPrice: Double, cryptoMounts: Double): Double{
         val argCryptoPrice = proxyUsdPrice.convertUSDPrice(cryptoPrice)
         return argCryptoPrice * cryptoMounts
+    }
+
+    fun allOffersFrom(userId: Long): List<UserOffer> {
+        return userOfferRepository.findAllByUserId(userId) // mirar 
     }
 
 }
