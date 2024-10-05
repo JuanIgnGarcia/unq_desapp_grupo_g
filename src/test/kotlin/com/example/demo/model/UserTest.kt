@@ -186,7 +186,7 @@ class UserTest {
     }
 
     @Test
-    fun `should create a user with a short crypto Address`() {
+    fun `should throw exception for try to create a user with a short crypto Address`() {
         val exception = assertThrows<IllegalArgumentException> {
             User.UserBuilder().cryptoAddress("1234567")
         }
@@ -202,7 +202,7 @@ class UserTest {
     }
 
     @Test
-    fun `should create a user with negative points`() {
+    fun `should throw exception for try to create a user with negative points`() {
         val exception = assertThrows<IllegalArgumentException> {
             User.UserBuilder().point(-1)
         }

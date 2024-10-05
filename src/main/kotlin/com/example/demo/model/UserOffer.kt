@@ -55,6 +55,7 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
         }
 
         fun cryptoMounts(cryptoMounts: Double) = apply {
+            require(cryptoMounts >= 0) { "The crypto mounts cannot be negative." }
             this.cryptoMounts = cryptoMounts
         }
 

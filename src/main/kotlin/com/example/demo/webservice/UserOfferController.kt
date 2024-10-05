@@ -18,12 +18,13 @@ class UserOfferController {
     lateinit var service: UserOfferService
 
     @Operation(summary = "Publish a new offer")
-    @PostMapping("/Offer")
+    @PostMapping("/publish")
     fun publishOffer (@RequestBody userOfferRequest: UserOfferRequest): ResponseEntity<UserOfferDTO> {
 
         val userOffer = service.publishOffer(userOfferRequest)
 
         val userOfferDTO = UserOfferDTO(
+            userOffer.id!!.toString(),
             userOffer.cryptoSymbol!!,
             userOffer.cryptoMounts!!,
             userOffer.cryptoPrice!!,
@@ -42,6 +43,7 @@ class UserOfferController {
         val usersOffers = service.allOffers().map {
             currentOfferUser: UserOffer ->
                 UserOfferDTO(
+                    currentOfferUser.id!!.toString(),
                     currentOfferUser.cryptoSymbol!!,
                     currentOfferUser.cryptoMounts!!,
                     currentOfferUser.cryptoPrice!!,
@@ -59,6 +61,7 @@ class UserOfferController {
         val usersOffers = service.allOffersFrom(userId).map {
                 currentOfferUser: UserOffer ->
             UserOfferDTO(
+                currentOfferUser.id!!.toString(),
                 currentOfferUser.cryptoSymbol!!,
                 currentOfferUser.cryptoMounts!!,
                 currentOfferUser.cryptoPrice!!,

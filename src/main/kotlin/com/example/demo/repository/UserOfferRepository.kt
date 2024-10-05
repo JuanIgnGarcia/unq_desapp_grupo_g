@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface UserOfferRepository : JpaRepository<UserOffer, Long> {
 
-    fun findAllByUserId(userId: Long): List<UserOffer>  // Borrar
     fun findAllByUserIdAndOfferStatus(userId: Long, offerStatus: OfferStatus): List<UserOffer>
 
 }

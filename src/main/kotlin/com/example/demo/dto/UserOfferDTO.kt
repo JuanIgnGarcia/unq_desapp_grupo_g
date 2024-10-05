@@ -1,6 +1,7 @@
 package com.example.demo.dto
 
-class UserOfferDTO(val cryptoSymbol: String,
+class UserOfferDTO(val userOfferId : String,
+                   val cryptoSymbol: String,
                    val cryptoMounts: Double,
                    val cryptoPrice:  Double,
                    val argsMounts:   Double,
