@@ -1,7 +1,6 @@
 package com.example.demo.webservice
 
 import com.example.demo.dto.TransactionDTO
-import com.example.demo.request.TransactionRequest
 import com.example.demo.service.TransactionService
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.beans.factory.annotation.Autowired
@@ -9,7 +8,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -20,25 +18,38 @@ class TransactionController {
 
 
     @Operation(summary = "Accept offer")
-    @PostMapping("/AcceptOffer")
-    fun acceptOffer (@RequestBody transactionRequest: TransactionRequest): ResponseEntity<TransactionDTO> {
+    @PostMapping("transaction/AcceptOffer/{userId}/{transactionId}")
+    fun acceptOffer (@PathVariable userId: String, @PathVariable transactionId: String): ResponseEntity<TransactionDTO> {
 
-        val transactionDTO = service.createTransaction(transactionRequest.userId,transactionRequest.offerId)
+        val transactionDTO = service.createTransaction(userId,transactionId)
 
         return ResponseEntity(transactionDTO, HttpStatus.CREATED)
     }
 
-    @Operation(summary = "Accept offer")
-    @PostMapping("/MakeTransfer/{userId}/{transactionId}")
+    @Operation(summary = "make a transfer")
+    @PostMapping("transaction/makeTransfer/{userId}/{transactionId}")
     fun makeTransfer(@PathVariable userId: String, @PathVariable transactionId: String): ResponseEntity<Void> {
         service.makeTransfer(userId,transactionId)
 
         return ResponseEntity(HttpStatus.CREATED)
     }
 
-    // Realice la transferencia (Si el usuario es comprador)
+    @Operation(summary = "Confirm receipt")
+    @PostMapping("transaction/confirmReceipt/{userId}/{transactionId}")
+    fun confirmReceipt(@PathVariable userId: String, @PathVariable transactionId: String): ResponseEntity<Void> {
+        service.confirmReceipt(userId,transactionId)
 
-    // Confirmar recepción  (Si el usuario es vendedor)
+        return ResponseEntity(HttpStatus.CREATED)
+    }
+
+    @Operation(summary = "all transactions")
+    @PostMapping("/transactions")
+    fun allTransactions(): List<TransactionDTO> {
+        val transactionsDTO = service.allTransactions()
+
+        return transactionsDTO
+    }
+
 
     // Cancelar
 

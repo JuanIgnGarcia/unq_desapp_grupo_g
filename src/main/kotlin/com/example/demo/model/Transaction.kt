@@ -68,13 +68,23 @@ class Transaction(builder: TransactionBuilder) {
             return offer.isAvailable()
         }
 
-
     }
 
     fun makeTransfer(user: User<Any?>) {
         val finishTime = Date() // "+ ventaja a los usuarios para mejor experiencia"
 
         validateTransaction(user)
+        val transactionDuration = minutesElapsed(this.startTime!!,finishTime)
+
+        updateOffer(transactionDuration)
+        this.acceptingUser!!.userUpdateForFinishTransaction(transactionDuration)
+        this.transactionStatus = TransactionStatus.CLOSE
+    }
+
+    fun confirmReceipt(user: User<Any?>) {
+        val finishTime = Date() // "+ ventaja a los usuarios para mejor experiencia"
+
+        validateReceipt(user)
         val transactionDuration = minutesElapsed(this.startTime!!,finishTime)
 
         updateOffer(transactionDuration)
@@ -94,15 +104,21 @@ class Transaction(builder: TransactionBuilder) {
     private fun validateTransaction(user: User<Any?>) {
         if (!validateUser(user) ||
             !validateTransactionStatus() ||
-            !validateOfferType()
+            !this.offer!!.isASell()
            ){
             throw TimeoutException("error") // tirar otro exception
         }
     }
 
-    private fun validateOfferType(): Boolean {
-        return this.offer!!.isABuy()
+    private fun validateReceipt(user: User<Any?>) {
+        if (!validateUser(user) ||
+            !validateTransactionStatus() ||
+            !this.offer!!.isABuy()
+        ){
+            throw TimeoutException("error") // tirar otro exception
+        }
     }
+
 
     private fun validateTransactionStatus(): Boolean {
         return this.transactionStatus!!.isActive()

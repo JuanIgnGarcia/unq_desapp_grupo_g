@@ -118,4 +118,6 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
         this.user!!.userUpdateForFinishTransaction(transactionDuration)
     }
 
+    fun isASell(): Boolean { return !isABuy()}
+
 }

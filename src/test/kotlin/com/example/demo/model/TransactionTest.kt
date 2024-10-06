@@ -22,7 +22,7 @@ class TransactionTest {
         val exception = assertThrows<IllegalArgumentException> {
             Transaction.TransactionBuilder().offer(offer).build()
         }
-        assertEquals("The offer is available.", exception.message)
+        assertEquals("The offer is unavailable.", exception.message)
     }
 
     /*  Para identificar diferentes user usar mail ?

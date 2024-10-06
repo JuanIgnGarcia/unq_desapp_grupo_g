@@ -25,7 +25,7 @@ class TransactionService {
 
         val offer = findUserOffer(offerId)
 
-        val acceptingUser = this.findUser(userId)
+        val acceptingUser = findUser(userId)
 
         try {
             val transaction = Transaction.TransactionBuilder()
@@ -35,7 +35,7 @@ class TransactionService {
                 .transactionStatus(TransactionStatus.ACTIVE)
                 .build()
 
-            val transactionDTO = this.transactionToDto(transaction,this.mailingAddress(offer))
+            val transactionDTO = transactionToDto(transaction,mailingAddress(offer))
             offer.invalidate()
             userOfferRepository.save(offer)  // necesario ?
             transactionRepository.save(transaction)
@@ -47,13 +47,28 @@ class TransactionService {
     }
 
     fun makeTransfer(userId: String, transactionId: String) {
-        val user = this.findUser(userId)
+        val user = findUser(userId)
         val transaction = transactionRepository.findById(transactionId.toLong()).
         orElseThrow{ throw TimeoutException("Offer $transactionId not found") //TransactionNotFoundException("Transaction $transactionId not found")
         }
         transaction.makeTransfer(user)
         transactionRepository.save(transaction)
 
+    }
+
+    fun confirmReceipt(userId: String, transactionId: String) {
+        val user = findUser(userId)
+        val transaction = transactionRepository.findById(transactionId.toLong()).
+        orElseThrow{ throw TimeoutException("Offer $transactionId not found") //TransactionNotFoundException("Transaction $transactionId not found")
+        }
+        transaction.confirmReceipt(user)
+        transactionRepository.save(transaction)
+    }
+
+    fun allTransactions(): List<TransactionDTO> {
+        val transactions = transactionRepository.findAll().map { transaction -> transactionToDto(transaction,mailingAddress(transaction.offer!!))}
+
+        return transactions
     }
 
     private fun findUser(userId: String): User<Any?> {  // refactor
@@ -78,7 +93,6 @@ class TransactionService {
         }
     }
 
-
     private fun transactionToDto(transaction: Transaction,mailingAddress : String): TransactionDTO {
         val transactionOffer = transaction.offer!!
 
@@ -98,7 +112,5 @@ class TransactionService {
         )
         return transactionDTO
     }
-
-
 
 }
