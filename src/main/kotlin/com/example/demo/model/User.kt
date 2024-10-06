@@ -1,11 +1,12 @@
 package com.example.demo.model
 
 import jakarta.persistence.*
+import java.util.concurrent.TimeoutException
 import java.util.regex.Pattern
 
 @Entity
 @Table(name = "user_table")
-class User private constructor(builder: UserBuilder) {
+class User<Date> private constructor(builder: UserBuilder) {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,9 +26,9 @@ class User private constructor(builder: UserBuilder) {
     @Column
     val cryptoAddress: String? = builder.cryptoAddress
     @Column
-    val point: Int = builder.point ?: 0
+    var point: Int = builder.point ?: 0
     @Column
-    val mountCompletedTransactions: Int = builder.mountCompletedTransactions ?: 0
+    var mountCompletedTransactions: Int = builder.mountCompletedTransactions ?: 0
 
 
     class UserBuilder {
@@ -45,9 +46,9 @@ class User private constructor(builder: UserBuilder) {
             private set
         var cryptoAddress: String? = null
             private set
-        var point: Int? = null
+        var point: Int? = null  // refactor reputationPoints
             private set
-        var mountCompletedTransactions: Int? = null
+        var mountCompletedTransactions: Int? = null // refactor amountCompletedTransactions
             private set
 
         fun name(name: String) = apply {
@@ -95,7 +96,7 @@ class User private constructor(builder: UserBuilder) {
             this.mountCompletedTransactions = mountCompletedTransactions
         }
 
-        fun build(): User {
+        fun build(): User<Any?> {
             return User(this)
         }
 
@@ -117,11 +118,24 @@ class User private constructor(builder: UserBuilder) {
     fun userLastName(): String = this.lastName!!
 
     override fun equals(other: Any?): Boolean {
-        return (other is User) && (this.id == other.id)
+        return (other is User<*>) && (this.id == other.id)
     }
 
     override fun hashCode(): Int {
         return id?.hashCode() ?: 0
+    }
+
+    fun userUpdateForFinishTransaction(transactionDuration: Long) {
+        this.mountCompletedTransactions += 1
+        this.point +=  this.reputationPointsToaAdd(transactionDuration)
+    }
+
+    private fun reputationPointsToaAdd(transactionDuration: Long): Int {
+        if(transactionDuration < 0){throw TimeoutException("Time error")} // mirar
+        return when (transactionDuration <= 30) {
+            true  -> 10
+            false -> 5
+        }
     }
 
 }

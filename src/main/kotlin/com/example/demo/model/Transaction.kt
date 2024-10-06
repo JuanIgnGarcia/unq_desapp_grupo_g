@@ -2,6 +2,8 @@ package com.example.demo.model
 
 import jakarta.persistence.*
 import java.util.Date
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 @Entity
 @Table(name = "transaction_table")
@@ -17,7 +19,7 @@ class Transaction(builder: TransactionBuilder) {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    var acceptingUser : User? = builder.acceptingUser
+    var acceptingUser : User<Any?>? = builder.acceptingUser
 
     @Column
     var startTime : Date? = builder.startTime
@@ -29,7 +31,7 @@ class Transaction(builder: TransactionBuilder) {
     class TransactionBuilder {
         var offer: UserOffer? = null
             private set
-        var acceptingUser: User? = null
+        var acceptingUser: User<Any?>? = null
             private set
         var startTime: Date? = null
             private set
@@ -41,7 +43,7 @@ class Transaction(builder: TransactionBuilder) {
             this.offer = offer
         }
 
-        fun acceptingUser(acceptingUser: User) = apply {
+        fun acceptingUser(acceptingUser: User<Any?>) = apply {
             require(isADiferentUser(acceptingUser)) { "A single user can not bid on their own offer." }
             this.acceptingUser = acceptingUser
         }
@@ -58,7 +60,7 @@ class Transaction(builder: TransactionBuilder) {
             return Transaction(this)
         }
 
-        private fun isADiferentUser(acceptingUser: User): Boolean {
+        private fun isADiferentUser(acceptingUser: User<Any?>): Boolean {
             return this.offer!!.user() != acceptingUser
         }
 
@@ -67,6 +69,47 @@ class Transaction(builder: TransactionBuilder) {
         }
 
 
+    }
+
+    fun makeTransfer(user: User<Any?>) {
+        val finishTime = Date() // "+ ventaja a los usuarios para mejor experiencia"
+
+        validateTransaction(user)
+        val transactionDuration = minutesElapsed(this.startTime!!,finishTime)
+
+        updateOffer(transactionDuration)
+        this.acceptingUser!!.userUpdateForFinishTransaction(transactionDuration)
+        this.transactionStatus = TransactionStatus.CLOSE
+    }
+
+    private fun minutesElapsed(startTime: Date, finishTime: Date): Long {
+        val durationMiliSeconds = finishTime.time - startTime.time
+        return TimeUnit.MILLISECONDS.toMinutes(durationMiliSeconds)
+    }
+
+    private fun updateOffer(transactionDuration: Long) {
+        this.offer!!.finishSuccessfullyOffer(transactionDuration)
+    }
+
+    private fun validateTransaction(user: User<Any?>) {
+        if (!validateUser(user) ||
+            !validateTransactionStatus() ||
+            !validateOfferType()
+           ){
+            throw TimeoutException("error") // tirar otro exception
+        }
+    }
+
+    private fun validateOfferType(): Boolean {
+        return this.offer!!.isABuy()
+    }
+
+    private fun validateTransactionStatus(): Boolean {
+        return this.transactionStatus!!.isActive()
+    }
+
+    private fun validateUser(user: User<Any?>): Boolean {
+        return user == this.offer!!.user()
     }
 
     /*

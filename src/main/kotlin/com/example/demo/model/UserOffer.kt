@@ -22,7 +22,7 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
     var argsMounts: Double? = builder.argsMounts
     @ManyToOne
     @JoinColumn(name = "user_id")
-    var user: User? = builder.user
+    var user: User<Any?>? = builder.user
     @Column
     var offerDate: Date? = builder.offerDate
     @Column
@@ -39,7 +39,7 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
             private set
         var argsMounts: Double? = null
             private set
-        var user: User? = null
+        var user: User<Any?>? = null
             private set
         var offerDate: Date? = null
             private set
@@ -68,7 +68,7 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
             this.argsMounts = argsMounts
         }
 
-        fun user(user: User) = apply {
+        fun user(user: User<Any?>) = apply {
             this.user = user
         }
 
@@ -104,10 +104,18 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
 
     fun userLastName(): String { return this.user!!.userLastName() }
 
-    fun user(): User? { return this.user }
+    fun user(): User<Any?> { return this.user!! }
 
     fun isAvailable(): Boolean {return this.offerStatus!!.isAvailable()}
 
     fun invalidate() {this.offerStatus = OfferStatus.UNVAILABLE}
+
+    fun isABuy(): Boolean { return this.offerType!!.isABuy()}
+
+
+    fun finishSuccessfullyOffer(transactionDuration: Long) {
+        this.offerStatus = OfferStatus.UNVAILABLE
+        this.user!!.userUpdateForFinishTransaction(transactionDuration)
+    }
 
 }

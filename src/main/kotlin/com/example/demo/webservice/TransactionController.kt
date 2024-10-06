@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
@@ -27,6 +28,13 @@ class TransactionController {
         return ResponseEntity(transactionDTO, HttpStatus.CREATED)
     }
 
+    @Operation(summary = "Accept offer")
+    @PostMapping("/MakeTransfer/{userId}/{transactionId}")
+    fun makeTransfer(@PathVariable userId: String, @PathVariable transactionId: String): ResponseEntity<Void> {
+        service.makeTransfer(userId,transactionId)
+
+        return ResponseEntity(HttpStatus.CREATED)
+    }
 
     // Realice la transferencia (Si el usuario es comprador)
 

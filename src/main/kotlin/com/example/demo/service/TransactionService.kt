@@ -1,11 +1,8 @@
 package com.example.demo.service
 
 import com.example.demo.dto.TransactionDTO
+import com.example.demo.model.*
 //import com.example.demo.exceptions.OfferTypeException
-import com.example.demo.model.OfferType
-import com.example.demo.model.Transaction
-import com.example.demo.model.TransactionStatus
-import com.example.demo.model.UserOffer
 import com.example.demo.repository.TransactionRepository
 import com.example.demo.repository.UserOfferRepository
 import com.example.demo.repository.UserRepository
@@ -26,14 +23,9 @@ class TransactionService {
 
     fun createTransaction(userId: String, offerId: String) : TransactionDTO {
 
+        val offer = findUserOffer(offerId)
 
-        val offer = userOfferRepository.findById(offerId.toLong()).
-            orElseThrow { throw TimeoutException("Offer $offerId not found:") //UserOfferNotFoundException("Offer $offerId not found")
-            }
-
-        val acceptingUser = userRepository.findById(userId.toLong()).
-            orElseThrow{ throw TimeoutException("Offer $offerId not found") //UserNotFoundException("User $userId not found")
-            }
+        val acceptingUser = this.findUser(userId)
 
         try {
             val transaction = Transaction.TransactionBuilder()
@@ -43,16 +35,37 @@ class TransactionService {
                 .transactionStatus(TransactionStatus.ACTIVE)
                 .build()
 
-            val transactionDTO = this.transactionToDto(transaction,this.mailingAddress(offer!!))
+            val transactionDTO = this.transactionToDto(transaction,this.mailingAddress(offer))
             offer.invalidate()
-            userOfferRepository.save(offer)  // necesario
+            userOfferRepository.save(offer)  // necesario ?
             transactionRepository.save(transaction)
             return transactionDTO
 
         }catch (e: Exception) {
             throw TimeoutException("Failed to create transaction: ${e.message}") //TransactionCreationException("Failed to create transaction: ${e.message}")
         }
+    }
 
+    fun makeTransfer(userId: String, transactionId: String) {
+        val user = this.findUser(userId)
+        val transaction = transactionRepository.findById(transactionId.toLong()).
+        orElseThrow{ throw TimeoutException("Offer $transactionId not found") //TransactionNotFoundException("Transaction $transactionId not found")
+        }
+        transaction.makeTransfer(user)
+        transactionRepository.save(transaction)
+
+    }
+
+    private fun findUser(userId: String): User<Any?> {  // refactor
+        return userRepository.findById(userId.toLong()).
+        orElseThrow{ throw TimeoutException("Offer $userId not found") //UserNotFoundException("User $userId not found")
+        }
+    }
+
+    private fun findUserOffer(offerId: String): UserOffer {  // refactor
+        return userOfferRepository.findById(offerId.toLong()).
+        orElseThrow { throw TimeoutException("Offer $offerId not found:") //UserOfferNotFoundException("Offer $offerId not found")
+        }
     }
 
     private fun mailingAddress(offer: UserOffer): String {
@@ -85,6 +98,7 @@ class TransactionService {
         )
         return transactionDTO
     }
+
 
 
 }

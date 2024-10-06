@@ -1,8 +1,9 @@
 package com.example.demo.model
 
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.util.concurrent.TimeoutException
 import kotlin.test.assertNotNull
 
 
@@ -223,6 +224,104 @@ class UserTest {
             User.UserBuilder().mountCompletedTransactions(-1)
         }
         assertEquals("Completed transactions cannot be negative.", exception.message)
+    }
+
+    @Test
+    fun `should give user name`() {
+        val user = User.UserBuilder().name("Mariana").build()
+
+        assertEquals("Mariana", user.userName())
+    }
+
+    @Test
+    fun `should throw exception for null name`() {
+        val user = User.UserBuilder().build()
+
+        assertThrows<NullPointerException> {
+            user.userName()
+        }
+    }
+
+    @Test
+    fun `should give user lastname`() {
+        val user = User.UserBuilder().lastName("Lopez").build()
+
+        assertEquals("Lopez", user.userLastName())
+    }
+
+    @Test
+    fun `should throw exception for null lastname`() {
+        val user = User.UserBuilder().build()
+
+        assertThrows<NullPointerException> {
+            user.userLastName()
+        }
+    }
+
+    /*  Como testear == ?
+    @Test
+    fun `should be the same user`() {
+        val user = User.UserBuilder().id(1).build()
+        assertTrue(user == user)
+        }
+    }
+
+    @Test
+    fun `should not be the same user`() {
+        val user = User.UserBuilder().id(1).build()
+        val user2 = User.UserBuilder().id(2).build()
+        assertFalse(user == user2)
+    }
+  */
+
+
+    @Test
+    fun `should increase 10 points and 1 transaction for transactionDuration under 30 min`() {
+        val user = User.UserBuilder()
+            .point(0)
+            .mountCompletedTransactions(0)
+            .build()
+
+        user.userUpdateForFinishTransaction(15)
+        assertEquals(10, user.point)
+        assertEquals(1,user.mountCompletedTransactions)
+    }
+
+    @Test
+    fun `should increase 10 points and 1 transaction for transactionDuration 30 min `() {
+        val user = User.UserBuilder()
+            .point(0)
+            .mountCompletedTransactions(0)
+            .build()
+
+        user.userUpdateForFinishTransaction(30)
+        assertEquals(10, user.point)
+        assertEquals(1,user.mountCompletedTransactions)
+    }
+
+    @Test
+    fun `should increase 10 points and 1 transaction for transactionDuration over 30 min `() {
+        val user = User.UserBuilder()
+            .point(0)
+            .mountCompletedTransactions(0)
+            .build()
+
+        user.userUpdateForFinishTransaction(45)
+        assertEquals(5, user.point)
+        assertEquals(1,user.mountCompletedTransactions)
+    }
+
+
+    @Test
+    fun `should throw exception for negative time`() {
+        val user = User.UserBuilder()
+            .point(0)
+            .mountCompletedTransactions(0)
+            .build()
+
+        assertThrows<TimeoutException> { // mirar
+            user.userUpdateForFinishTransaction(-1)
+        }
     }
 
 }

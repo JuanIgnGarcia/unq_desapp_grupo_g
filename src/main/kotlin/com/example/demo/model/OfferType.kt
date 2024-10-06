@@ -1,10 +1,19 @@
 package com.example.demo.model
 
-import com.example.demo.exceptions.OfferTypeException
+//import com.example.demo.exceptions.OfferTypeException
+import java.util.concurrent.TimeoutException
 
 enum class OfferType {
     BUY,
-    SELL
+    SELL;
+
+    fun isABuy(): Boolean {
+        return when (this) {
+            BUY  -> true
+            else -> false
+        }
+    }
+
 }
 
 object OfferTypeHelper {
@@ -14,7 +23,7 @@ object OfferTypeHelper {
             "BUY"  -> OfferType.BUY
             "SELL" -> OfferType.SELL
             else -> {
-                throw OfferTypeException("Invalid Offer type")
+                throw TimeoutException("Invalid Offer type")//OfferTypeException("Invalid Offer type")
             }
         }
     }

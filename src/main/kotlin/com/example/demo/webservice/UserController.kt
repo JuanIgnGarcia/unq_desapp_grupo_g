@@ -39,7 +39,7 @@ class UserController {
     @Operation(summary = "Get all users")
     @GetMapping("/users")
     fun getUsers(): List<UserDTO> {
-        val users = service.allUsers().map { currentUser: User -> UserDTO(currentUser.id.toString(),currentUser.name!!,currentUser.lastName!!,currentUser.point) }
+        val users = service.allUsers().map { currentUser: User<Any?> -> UserDTO(currentUser.id.toString(),currentUser.name!!,currentUser.lastName!!,currentUser.point) }
         return users
     }
 }
