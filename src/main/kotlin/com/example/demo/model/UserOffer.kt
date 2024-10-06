@@ -106,4 +106,8 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
 
     fun user(): User? { return this.user }
 
+    fun isAvailable(): Boolean {return this.offerStatus!!.isAvailable()}
+
+    fun invalidate() {this.offerStatus = OfferStatus.UNVAILABLE}
+
 }

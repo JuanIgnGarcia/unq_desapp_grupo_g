@@ -58,6 +58,9 @@ class UserOfferService {
                 .offerType(OfferTypeHelper.transform(userOfferRequest.offerType))
                 .offerStatus(OfferStatus.AVAILABLE)
                 .build()
+
+        //userOfferRepository.save(newUserOffer) --> Test
+
         return newUserOffer
     }
 

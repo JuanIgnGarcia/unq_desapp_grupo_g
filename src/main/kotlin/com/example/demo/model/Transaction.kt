@@ -13,43 +13,59 @@ class Transaction(builder: TransactionBuilder) {
 
     @ManyToOne
     @JoinColumn(name = "offer_id")
-    var offer : UserOffer? = builder.offer  // debe tener al usuario que creo la oferta
+    var offer : UserOffer? = builder.offer
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    var bidderUser : User? = builder.bidderUser
+    var acceptingUser : User? = builder.acceptingUser
 
     @Column
-    var startTime : Date = builder.startTime
-    /*
+    var startTime : Date? = builder.startTime
+
     @Column
-    var status : TransactionStatus = builder.status   // Necesario ??  calculo que si para poder avanzar en las etapas de la transaction
-    */
+    var transactionStatus : TransactionStatus? = builder.transactionStatus
+
 
     class TransactionBuilder {
         var offer: UserOffer? = null
             private set
-        var bidderUser: User? = null
+        var acceptingUser: User? = null
             private set
-        var startTime: Date = Date()
+        var startTime: Date? = null
+            private set
+        var transactionStatus: TransactionStatus? = null
             private set
 
         fun offer(offer: UserOffer) = apply {
-            //  comprobar que la oferta este abierta (no iniciada, cerrada)
-            //require(isAOpenOffer(offer)) { "the offer is not open." }
+            require(isAAvailableOffer(offer)) { "The offer is unavailable." }
             this.offer = offer
         }
 
-        fun bidderUser(bidderUser: User) = apply {
-            require(isADiferentUser(bidderUser)) { "A single user can not bid on their own offer." }
-            this.bidderUser = bidderUser
+        fun acceptingUser(acceptingUser: User) = apply {
+            require(isADiferentUser(acceptingUser)) { "A single user can not bid on their own offer." }
+            this.acceptingUser = acceptingUser
         }
 
-        private fun isADiferentUser(bidderUser: User): Boolean {
-            return this.offer!!.user() == bidderUser
-            //return bidderUser.name != offer?.userName  &&  bidderUser.lastName != offer?.userLastName // mirar seguro da un error porque pide offer
-            // return bidderUser.email != offer.user.email   // lo que es unico entre usuario es el email  --> implementar equals en User
+        fun startTime(startTime: Date) = apply {
+            this.startTime = startTime
         }
+
+        fun transactionStatus(transactionStatus: TransactionStatus) = apply {
+            this.transactionStatus = transactionStatus
+        }
+
+        fun build(): Transaction {
+            return Transaction(this)
+        }
+
+        private fun isADiferentUser(acceptingUser: User): Boolean {
+            return this.offer!!.user() != acceptingUser
+        }
+
+        private fun isAAvailableOffer(offer: UserOffer): Boolean {
+            return offer.isAvailable()
+        }
+
 
     }
 
