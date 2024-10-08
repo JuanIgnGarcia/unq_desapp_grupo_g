@@ -9,7 +9,9 @@ import io.swagger.v3.oas.annotations.Operation
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import java.util.*
+import org.springframework.aot.generate.Generated
 
+@Generated
 @RestController
 class CryptoController {
 

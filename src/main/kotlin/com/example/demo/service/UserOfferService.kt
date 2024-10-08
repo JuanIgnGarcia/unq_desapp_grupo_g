@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
 import java.util.concurrent.TimeoutException
+import org.springframework.aot.generate.Generated
 
+@Generated
 @Service
 class UserOfferService {
 

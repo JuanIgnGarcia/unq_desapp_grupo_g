@@ -5,7 +5,9 @@ import com.example.demo.model.CryptoPrice
 import com.example.demo.model.CryptoSymbolHelper
 import com.example.demo.service.Proxys.ProxyBinance
 import org.springframework.stereotype.Service
+import org.springframework.aot.generate.Generated
 
+@Generated
 @Service
 class CryptoService {
 

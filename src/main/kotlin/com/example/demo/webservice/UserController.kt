@@ -9,7 +9,9 @@ import com.example.demo.request.UserRequest
 import com.example.demo.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.web.bind.annotation.*
+import org.springframework.aot.generate.Generated
 
+@Generated
 @RestController
 class UserController {
 

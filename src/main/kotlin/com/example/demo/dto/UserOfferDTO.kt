@@ -1,5 +1,8 @@
 package com.example.demo.dto
 
+import org.springframework.aot.generate.Generated
+
+@Generated
 class UserOfferDTO(val userOfferId : String,
                    val cryptoSymbol: String,
                    val cryptoMounts: Double,

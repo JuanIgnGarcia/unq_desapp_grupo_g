@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service
 import java.time.ZoneId
 import java.util.*
 import java.util.concurrent.TimeoutException
+import org.springframework.aot.generate.Generated
 
+@Generated
 @Service
 class TransactionService<LocalDate> {
 
