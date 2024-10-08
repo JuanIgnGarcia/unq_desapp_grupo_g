@@ -18,7 +18,7 @@ class TransactionController {
 
 
     @Operation(summary = "Accept offer")
-    @PostMapping("transaction/AcceptOffer/{userId}/{transactionId}")
+    @PostMapping("/transaction/AcceptOffer/{userId}/{transactionId}")
     fun acceptOffer (@PathVariable userId: String, @PathVariable transactionId: String): ResponseEntity<TransactionDTO> {
 
         val transactionDTO = service.createTransaction(userId,transactionId)
@@ -27,7 +27,7 @@ class TransactionController {
     }
 
     @Operation(summary = "make a transfer")
-    @PostMapping("transaction/makeTransfer/{userId}/{transactionId}")
+    @PostMapping("/transaction/makeTransfer/{userId}/{transactionId}")
     fun makeTransfer(@PathVariable userId: String, @PathVariable transactionId: String): ResponseEntity<Void> {
         service.makeTransfer(userId,transactionId)
 
@@ -35,9 +35,17 @@ class TransactionController {
     }
 
     @Operation(summary = "Confirm receipt")
-    @PostMapping("transaction/confirmReceipt/{userId}/{transactionId}")
+    @PostMapping("/transaction/confirmReceipt/{userId}/{transactionId}")
     fun confirmReceipt(@PathVariable userId: String, @PathVariable transactionId: String): ResponseEntity<Void> {
         service.confirmReceipt(userId,transactionId)
+
+        return ResponseEntity(HttpStatus.CREATED)
+    }
+
+    @Operation(summary = "Cancel a active transaction")
+    @PostMapping("/transaction/cancel/{userId}/{transactionId}")
+    fun cancelTransaction(@PathVariable userId: String, @PathVariable transactionId: String): ResponseEntity<Void> {
+        service.cancelTransaction(userId,transactionId)
 
         return ResponseEntity(HttpStatus.CREATED)
     }
@@ -49,9 +57,6 @@ class TransactionController {
 
         return transactionsDTO
     }
-
-
-    // Cancelar
 
     // Dado un usuario,  Informar el volumen operado de cripto activos entre dos fechas.
 

@@ -92,6 +92,20 @@ class Transaction(builder: TransactionBuilder) {
         this.transactionStatus = TransactionStatus.CLOSE
     }
 
+    fun cancelTransaction(user: User<Any?>) {
+        validateUsers(user)
+        this.transactionStatus = TransactionStatus.CANCEL
+        this.offer!!.avalidate()
+        user.userUpdateForCancelTransaction()
+    }
+
+    private fun validateUsers(user: User<Any?>) {
+        if( user != this.acceptingUser &&
+            user != this.offer!!.user() ){
+            throw TimeoutException("The user ${user.id} doesn't participe in that transaction") // tirar otro exception
+        }
+    }
+
     private fun minutesElapsed(startTime: Date, finishTime: Date): Long {
         val durationMiliSeconds = finishTime.time - startTime.time
         return TimeUnit.MILLISECONDS.toMinutes(durationMiliSeconds)
@@ -119,7 +133,6 @@ class Transaction(builder: TransactionBuilder) {
         }
     }
 
-
     private fun validateTransactionStatus(): Boolean {
         return this.transactionStatus!!.isActive()
     }
@@ -127,14 +140,5 @@ class Transaction(builder: TransactionBuilder) {
     private fun validateUser(user: User<Any?>): Boolean {
         return user == this.offer!!.user()
     }
-
-    /*
-    fun cancel(){
-        // cambiar el estadod de la oferta a disponible (Abierto/Open)
-        // guardar la Transaction en a la persona que cancelo la Transaction
-        // restar el puntaje en la reputacion a la persona que cancelo la Transaction
-        // dar un mensaje que se cancelo exitosamente la Transaction (servicio)
-    }
-    */
 
 }

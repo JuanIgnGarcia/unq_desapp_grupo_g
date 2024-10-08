@@ -138,4 +138,6 @@ class User<Date> private constructor(builder: UserBuilder) {
         }
     }
 
+    fun userUpdateForCancelTransaction() { this.point -= 20 }
+
 }

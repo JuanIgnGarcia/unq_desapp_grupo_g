@@ -73,5 +73,16 @@ class UserOfferService {
         return userOfferRepository.findAllByUserIdAndOfferStatus(userId,OfferStatus.AVAILABLE)
     }
 
+    fun cancelOffer(userId: String, offerId: String) {
+        try {
+            val offer = userOfferRepository.findById(offerId.toLong()).get()
+            offer.validateCancelTheOffer(userId)
+            userOfferRepository.delete(offer)
+
+        } catch (e : Exception){
+            throw TimeoutException("Cant cancel the offer $offerId because ${e.message}") // cambiar exception
+        }
+    }
+
 }
 

@@ -53,7 +53,6 @@ class TransactionService {
         }
         transaction.makeTransfer(user)
         transactionRepository.save(transaction)
-
     }
 
     fun confirmReceipt(userId: String, transactionId: String) {
@@ -62,6 +61,15 @@ class TransactionService {
         orElseThrow{ throw TimeoutException("Offer $transactionId not found") //TransactionNotFoundException("Transaction $transactionId not found")
         }
         transaction.confirmReceipt(user)
+        transactionRepository.save(transaction)
+    }
+
+    fun cancelTransaction(userId: String, transactionId: String) {
+        val user = findUser(userId)
+        val transaction = transactionRepository.findById(transactionId.toLong()).
+        orElseThrow{ throw TimeoutException("Offer $transactionId not found") //TransactionNotFoundException("Transaction $transactionId not found")
+        }
+        transaction.cancelTransaction(user)
         transactionRepository.save(transaction)
     }
 

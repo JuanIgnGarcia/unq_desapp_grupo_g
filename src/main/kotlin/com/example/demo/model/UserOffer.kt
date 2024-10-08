@@ -3,6 +3,7 @@ package com.example.demo.model
 import com.example.demo.service.CryptoService
 import jakarta.persistence.*
 import java.util.Date
+import java.util.concurrent.TimeoutException
 import kotlin.math.abs
 
 @Entity
@@ -119,5 +120,17 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
     }
 
     fun isASell(): Boolean { return !isABuy()}
+
+    fun avalidate() {this.offerStatus = OfferStatus.AVAILABLE}
+
+    fun validateCancelTheOffer(userId: String) {
+        if (this.offerStatus == OfferStatus.UNVAILABLE ||
+            this.user!!.id == userId.toLong()                 // Cambiar ?
+        ){
+            throw TimeoutException("validateCancelTheOffer") // mirar
+        }
+
+    }
+
 
 }
