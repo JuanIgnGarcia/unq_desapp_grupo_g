@@ -1,5 +1,8 @@
 package com.example.demo.dto
 
+import org.springframework.aot.generate.Generated
+
+@Generated
 class TransactionDTO (val id : String,
                       val criptosymbol: String,
                       val cryptoMounts :Double,
