@@ -1,5 +1,7 @@
 package com.example.demo.request
+import org.springframework.aot.generate.Generated
 
+@Generated
 class UserRequest ( val name: String,
                     val lastName: String,
                     val email: String,

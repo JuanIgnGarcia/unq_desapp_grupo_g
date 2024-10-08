@@ -3,7 +3,9 @@ package com.example.demo.service.Proxys
 import com.example.demo.model.CryptoPrice
 import org.springframework.web.client.RestTemplate
 import java.util.*
+import org.springframework.aot.generate.Generated
 
+@Generated
 class ProxyBinance {
 
     private val restTemplate = RestTemplate()

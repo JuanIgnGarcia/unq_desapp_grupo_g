@@ -6,8 +6,9 @@ import com.google.gson.reflect.TypeToken
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import org.springframework.aot.generate.Generated
 
-
+@Generated
 class ProxyUsdPrice {
 
 
