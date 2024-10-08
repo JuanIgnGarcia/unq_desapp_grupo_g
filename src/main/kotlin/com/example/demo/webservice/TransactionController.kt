@@ -19,7 +19,7 @@ import org.springframework.aot.generate.Generated
 class TransactionController {
 
     @Autowired
-    lateinit var service: TransactionService<Any?>
+    lateinit var service: TransactionService
 
 
     @Operation(summary = "Accept offer")
