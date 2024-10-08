@@ -129,8 +129,10 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
         ){
             throw TimeoutException("validateCancelTheOffer") // mirar
         }
-
     }
 
+    fun totalAmount() : Double {return this.cryptoMounts!! * this.cryptoPrice!! }
+
+    fun argsMounts() : Double {return this.argsMounts!! }
 
 }

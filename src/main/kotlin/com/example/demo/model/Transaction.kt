@@ -141,4 +141,12 @@ class Transaction(builder: TransactionBuilder) {
         return user == this.offer!!.user()
     }
 
+    fun totalAmount() : Double  {
+        return this.offer!!.totalAmount()
+    }
+
+    fun totalAmountArgs() : Double{
+        return this.offer!!.argsMounts()
+    }
+
 }

@@ -1,6 +1,8 @@
 package com.example.demo.webservice
 
 import com.example.demo.dto.TransactionDTO
+import com.example.demo.dto.TransactionPeriodDTO
+import com.example.demo.request.TransactionPeriodRequest
 import com.example.demo.service.TransactionService
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.beans.factory.annotation.Autowired
@@ -8,13 +10,14 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class TransactionController {
 
     @Autowired
-    lateinit var service: TransactionService
+    lateinit var service: TransactionService<Any?>
 
 
     @Operation(summary = "Accept offer")
@@ -58,7 +61,19 @@ class TransactionController {
         return transactionsDTO
     }
 
-    // Dado un usuario,  Informar el volumen operado de cripto activos entre dos fechas.
+    @Operation(summary = "Register a new user")
+    @PostMapping("/transactions/period")
+    fun allTransactionsDuringThePeriod(@RequestBody transactionPeriodRequest: TransactionPeriodRequest): ResponseEntity<TransactionPeriodDTO> {
+
+        val transactionPeriodDTO = service.allTransactionsDuringThePeriod(
+            transactionPeriodRequest.userId,
+            transactionPeriodRequest.startDate,
+            transactionPeriodRequest.endDate
+        )
+
+        return ResponseEntity(transactionPeriodDTO, HttpStatus.OK)
+    }
+
 
 
 }

@@ -1,6 +1,8 @@
 package com.example.demo.service
 
+import com.example.demo.dto.CryptoTransactionDto
 import com.example.demo.dto.TransactionDTO
+import com.example.demo.dto.TransactionPeriodDTO
 import com.example.demo.model.*
 //import com.example.demo.exceptions.OfferTypeException
 import com.example.demo.repository.TransactionRepository
@@ -8,11 +10,12 @@ import com.example.demo.repository.UserOfferRepository
 import com.example.demo.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.time.ZoneId
 import java.util.*
 import java.util.concurrent.TimeoutException
 
 @Service
-class TransactionService {
+class TransactionService<LocalDate> {
 
     @Autowired
     lateinit var transactionRepository : TransactionRepository
@@ -121,6 +124,38 @@ class TransactionService {
             acceptingUserId             = transaction.acceptingUser!!.id.toString()
         )
         return transactionDTO
+    }
+
+    fun allTransactionsDuringThePeriod(userId: String, startDate: java.time.LocalDate, endDate: java.time.LocalDate): TransactionPeriodDTO {
+
+        require(startDate.isBefore(endDate)) { "La fecha de inicio debe ser anterior a la fecha de fin." }
+
+
+        val startOfDay: Date = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+        val endOfDay: Date = Date.from(endDate.atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant())
+
+        val transactions = transactionRepository.findAllByOfferUserIdAndStartTimeBetweenAndTransactionStatus(
+            userId.toLong(),
+            startOfDay,
+            endOfDay,
+            TransactionStatus.CANCEL
+        )
+
+        val transactionsPeriod = TransactionPeriodDTO(
+            date = Date(),
+            totalAmount = transactions.sumOf { transaction -> transaction.totalAmount() },
+            totalAmountArgs = transactions.sumOf { transaction -> transaction.totalAmountArgs() },
+            cryptos  = transactions.map{
+                transaction -> CryptoTransactionDto(
+                    cryptoSymbol = transaction.offer!!.cryptoSymbol!!,
+                    cryptoAmount = transaction.offer!!.cryptoMounts!!,
+                    cryptoPrice = transaction.offer!!.cryptoPrice!!,
+                    cryptoPriceArg = transaction.offer!!.argsMounts!!
+                )
+            }
+        )
+
+        return transactionsPeriod
     }
 
 }

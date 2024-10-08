@@ -86,12 +86,12 @@ tasks.jacocoTestReport {
 		files(classDirectories.files.map {
 			fileTree(it).matching {
 				exclude(
-					"src/main/kotlin/com/example/demo/dto/**",
-					"src/main/kotlin/com/example/demo/exceptions/**",
-					"src/main/kotlin/com/example/demo/repository/**",
-					"src/main/kotlin/com/example/demo/request/**",
-					"src/main/kotlin/com/example/demo/service/**",
-					"src/main/kotlin/com/example/demo/webservice/**",
+					"**/src/main/kotlin/com/example/demo/dto/**",
+					"**/src/main/kotlin/com/example/demo/exceptions/**",
+					"**/src/main/kotlin/com/example/demo/repository/**",
+					"unq_desapp_grupo_g/src/main/kotlin/com/example/demo/request/**",
+					"unq_desapp_grupo_g/src/main/kotlin/com/example/demo/service/**",
+					"unq_desapp_grupo_g/src/main/kotlin/com/example/demo/webservice/**",
 				)
 			}
 		})
