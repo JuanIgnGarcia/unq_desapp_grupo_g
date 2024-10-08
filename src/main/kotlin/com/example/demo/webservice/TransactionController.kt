@@ -28,7 +28,7 @@ class TransactionController {
 
     @Operation(summary = "make a transfer")
     @PostMapping("/transaction/makeTransfer/{userId}/{transactionId}")
-    fun makeTransfer(@PathVariable userId: String, @PathVariable transactionId: String): ResponseEntity<Void> {
+    fun makeTransfer(@PathVariable userId: String, @PathVariable transactionId: String): ResponseEntity<Unit> {
         service.makeTransfer(userId,transactionId)
 
         return ResponseEntity(HttpStatus.CREATED)
@@ -36,7 +36,7 @@ class TransactionController {
 
     @Operation(summary = "Confirm receipt")
     @PostMapping("/transaction/confirmReceipt/{userId}/{transactionId}")
-    fun confirmReceipt(@PathVariable userId: String, @PathVariable transactionId: String): ResponseEntity<Void> {
+    fun confirmReceipt(@PathVariable userId: String, @PathVariable transactionId: String): ResponseEntity<Unit> {
         service.confirmReceipt(userId,transactionId)
 
         return ResponseEntity(HttpStatus.CREATED)
@@ -44,7 +44,7 @@ class TransactionController {
 
     @Operation(summary = "Cancel a active transaction")
     @PostMapping("/transaction/cancel/{userId}/{transactionId}")
-    fun cancelTransaction(@PathVariable userId: String, @PathVariable transactionId: String): ResponseEntity<Void> {
+    fun cancelTransaction(@PathVariable userId: String, @PathVariable transactionId: String): ResponseEntity<Unit> {
         service.cancelTransaction(userId,transactionId)
 
         return ResponseEntity(HttpStatus.CREATED)

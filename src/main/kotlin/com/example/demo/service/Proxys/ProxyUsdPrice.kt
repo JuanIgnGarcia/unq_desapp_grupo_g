@@ -1,6 +1,5 @@
 package com.example.demo.service.Proxys
 
-import com.example.demo.model.CryptoPrice
 import com.example.demo.model.UsdPrice
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
