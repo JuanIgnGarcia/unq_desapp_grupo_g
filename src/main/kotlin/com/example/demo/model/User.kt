@@ -3,6 +3,7 @@ package com.example.demo.model
 import jakarta.persistence.*
 import java.util.concurrent.TimeoutException
 import java.util.regex.Pattern
+import kotlin.math.max
 
 @Entity
 @Table(name = "user_table")
@@ -138,6 +139,14 @@ class User<Date> private constructor(builder: UserBuilder) {
         }
     }
 
-    fun userUpdateForCancelTransaction() { this.point -= 20 }
+    fun userUpdateForCancelTransaction() { this.point = max(0,this.point - 20) }
+
+    fun reputation(): Int {
+        return if(this.mountCompletedTransactions > 0){
+            this.point / this.mountCompletedTransactions
+        }else{
+            0
+        }
+    }
 
 }

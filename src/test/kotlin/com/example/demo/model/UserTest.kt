@@ -324,4 +324,49 @@ class UserTest {
         }
     }
 
+    @Test
+    fun `should indicate reputation`() {
+        val user = User.UserBuilder()
+            .point(10)
+            .mountCompletedTransactions(2)
+            .build()
+
+        assertEquals(5, user.reputation())
+    }
+
+    @Test
+    fun `should indicate for divide by 0`() {
+        val user = User.UserBuilder()
+            .point(0)
+            .mountCompletedTransactions(0)
+            .build()
+
+        assertEquals(0, user.reputation())
+    }
+
+    @Test
+    fun `should decrease 20 points for cancel a transaction`() {
+        val user = User.UserBuilder()
+            .point(60)
+            .mountCompletedTransactions(6)
+            .build()
+
+        user.userUpdateForCancelTransaction()
+        assertEquals(6, user.mountCompletedTransactions)
+        assertEquals(40, user.point)
+    }
+
+    @Test
+    fun `should decrease 10 points for cancel a transaction becasuse the user have only 10 points`() {
+        val user = User.UserBuilder()
+            .point(10)
+            .mountCompletedTransactions(1)
+            .build()
+
+        user.userUpdateForCancelTransaction()
+        assertEquals(1, user.mountCompletedTransactions)
+        assertEquals(0, user.point)
+    }
+
+
 }
