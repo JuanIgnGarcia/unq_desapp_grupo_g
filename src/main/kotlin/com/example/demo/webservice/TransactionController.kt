@@ -18,10 +18,10 @@ class TransactionController {
 
 
     @Operation(summary = "Accept offer")
-    @PostMapping("/transaction/AcceptOffer/{userId}/{transactionId}")
-    fun acceptOffer (@PathVariable userId: String, @PathVariable transactionId: String): ResponseEntity<TransactionDTO> {
+    @PostMapping("/transaction/AcceptOffer/{userId}/{offerId}")
+    fun acceptOffer (@PathVariable userId: String, @PathVariable offerId: String): ResponseEntity<TransactionDTO> {
 
-        val transactionDTO = service.createTransaction(userId,transactionId)
+        val transactionDTO = service.createTransaction(userId,offerId)
 
         return ResponseEntity(transactionDTO, HttpStatus.CREATED)
     }

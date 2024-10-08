@@ -4,6 +4,9 @@ val SWAGGER_SPRINGDOC_OPENAPI = "2.3.0"
 
 val SPRINGDOC_OPENAPI= "2.0.3"
 
+val LOGGING_INTERCEPTOR= "4.9.2"
+val OKHTTP= "4.9.3"
+val GSON= "2.8.9"
 
 plugins {
 	kotlin("jvm") version "1.9.25"
@@ -42,11 +45,9 @@ dependencies {
 	implementation("io.springfox:springfox-swagger2:$SWAGGER_VERSION")
 	implementation("io.springfox:springfox-swagger-ui:$SWAGGER_VERSION")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$SWAGGER_SPRINGDOC_OPENAPI")
-	implementation ("com.squareup.okhttp3:logging-interceptor:4.9.2")
-	implementation ("com.squareup.okhttp3:okhttp:4.9.3")
-	implementation ("com.squareup.okhttp3:logging-interceptor:4.9.2")
-	implementation ("com.squareup.okhttp3:okhttp:4.9.3")
-	implementation ("com.google.code.gson:gson:2.8.9")
+	implementation ("com.squareup.okhttp3:logging-interceptor:$LOGGING_INTERCEPTOR")
+	implementation ("com.squareup.okhttp3:okhttp:$OKHTTP")
+	implementation ("com.google.code.gson:gson:$GSON")
 
 
 

@@ -35,10 +35,12 @@ class TransactionService {
                 .transactionStatus(TransactionStatus.ACTIVE)
                 .build()
 
-            val transactionDTO = transactionToDto(transaction,mailingAddress(offer))
             offer.invalidate()
             userOfferRepository.save(offer)  // necesario ?
-            transactionRepository.save(transaction)
+            val transactionPersisted = transactionRepository.save(transaction)
+
+            val transactionDTO = transactionToDto(transactionPersisted,mailingAddress(offer))
+
             return transactionDTO
 
         }catch (e: Exception) {
