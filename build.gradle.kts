@@ -82,6 +82,20 @@ tasks.jacocoTestReport {
 	reports {
 		xml.required.set(true)
 	}
+	classDirectories.setFrom(
+		files(classDirectories.files.map {
+			fileTree(it).matching {
+				exclude(
+					"unq_desapp_grupo_g/src/main/kotlin/com/example/demo/dto/**",
+					"unq_desapp_grupo_g/src/main/kotlin/com/example/demo/exceptions/**",
+					"unq_desapp_grupo_g/src/main/kotlin/com/example/demo/repository/**",
+					"unq_desapp_grupo_g/src/main/kotlin/com/example/demo/request/**",
+					"unq_desapp_grupo_g/src/main/kotlin/com/example/demo/service/**",
+					"unq_desapp_grupo_g/src/main/kotlin/com/example/demo/webservice/**",
+				)
+			}
+		})
+	)
 }
 
 

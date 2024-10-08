@@ -123,7 +123,7 @@ class User<Date> private constructor(builder: UserBuilder) {
     }
 
     override fun hashCode(): Int {
-        return id.hashCode() ?: 0
+        return id.hashCode()
     }
 
     fun userUpdateForFinishTransaction(transactionDuration: Long) {
