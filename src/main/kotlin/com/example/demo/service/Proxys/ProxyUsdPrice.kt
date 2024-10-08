@@ -1,12 +1,12 @@
 package com.example.demo.service.Proxys
 
+import org.springframework.aot.generate.Generated
 import com.example.demo.model.UsdPrice
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
-import org.springframework.aot.generate.Generated
 
 @Generated
 class ProxyUsdPrice {

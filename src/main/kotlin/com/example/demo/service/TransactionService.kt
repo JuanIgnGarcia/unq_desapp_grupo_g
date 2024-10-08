@@ -8,16 +8,16 @@ import com.example.demo.model.*
 import com.example.demo.repository.TransactionRepository
 import com.example.demo.repository.UserOfferRepository
 import com.example.demo.repository.UserRepository
+import org.springframework.aot.generate.Generated
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.ZoneId
 import java.util.*
 import java.util.concurrent.TimeoutException
-import org.springframework.aot.generate.Generated
 
 @Generated
 @Service
-class TransactionService<LocalDate> {
+class TransactionService {
 
     @Autowired
     lateinit var transactionRepository : TransactionRepository
