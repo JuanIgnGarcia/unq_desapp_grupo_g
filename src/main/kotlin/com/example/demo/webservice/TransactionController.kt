@@ -8,11 +8,8 @@ import io.swagger.v3.oas.annotations.Operation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
 import org.springframework.aot.generate.Generated
+import org.springframework.web.bind.annotation.*
 
 @Generated
 @RestController
@@ -56,7 +53,7 @@ class TransactionController {
     }
 
     @Operation(summary = "all transactions")
-    @PostMapping("/transactions")
+    @GetMapping("/transactions")
     fun allTransactions(): List<TransactionDTO> {
         val transactionsDTO = service.allTransactions()
 

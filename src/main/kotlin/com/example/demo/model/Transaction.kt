@@ -118,7 +118,7 @@ class Transaction(builder: TransactionBuilder) {
     private fun validateTransaction(user: User<Any?>) {
         if (!validateUser(user) ||
             !validateTransactionStatus() ||
-            !this.offer!!.isASell()
+            !this.offer!!.isABuy()
            ){
             throw TimeoutException("error") // tirar otro exception
         }
@@ -127,7 +127,7 @@ class Transaction(builder: TransactionBuilder) {
     private fun validateReceipt(user: User<Any?>) {
         if (!validateUser(user) ||
             !validateTransactionStatus() ||
-            !this.offer!!.isABuy()
+            !this.offer!!.isASell()
         ){
             throw TimeoutException("error") // tirar otro exception
         }
