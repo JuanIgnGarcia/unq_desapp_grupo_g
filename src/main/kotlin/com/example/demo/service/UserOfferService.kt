@@ -1,7 +1,8 @@
 package com.example.demo.service
 
-//import com.example.demo.exceptions.UserNotFoundException
-//import com.example.demo.exceptions.UserOfferCreationException
+import com.example.demo.exceptions.CancelOfferException
+import com.example.demo.exceptions.UserNotFoundException
+import com.example.demo.exceptions.UserOfferCreationException
 import com.example.demo.model.OfferStatus
 import com.example.demo.model.OfferTypeHelper
 import com.example.demo.model.UserOffer
@@ -13,7 +14,6 @@ import org.springframework.aot.generate.Generated
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
-import java.util.concurrent.TimeoutException
 
 @Generated
 @Service
@@ -31,7 +31,7 @@ class UserOfferService {
             userOfferRepository.save(userOffer)
             return userOffer
         }catch (e: Exception) {
-            throw TimeoutException("Failed to create user: ${e.message}") //UserOfferCreationException("Failed to create user: ${e.message}")
+            throw UserOfferCreationException("Failed to create user: ${e.message}")
         }
     }
 
@@ -45,7 +45,7 @@ class UserOfferService {
     private fun createUserOffer(userOfferRequest: UserOfferRequest): UserOffer {
 
         val user = userRepository.findById(userOfferRequest.userId.toLong())
-            .orElseThrow { throw  TimeoutException("user with id ${userOfferRequest.userId} dont exist") } //UserNotFoundException("user with id ${userOfferRequest.userId} dont exist")
+            .orElseThrow { throw  UserNotFoundException("user with id ${userOfferRequest.userId} dont exist")}
 
         val totalArgsMounts = calculateThePriceInPesos(userOfferRequest.cryptoPrice,userOfferRequest.cryptoMounts)
 
@@ -82,7 +82,7 @@ class UserOfferService {
             userOfferRepository.delete(offer)
 
         } catch (e : Exception){
-            throw TimeoutException("Cant cancel the offer $offerId because ${e.message}") // cambiar exception
+            throw CancelOfferException("Cant cancel the offer $offerId because ${e.message}")
         }
     }
 

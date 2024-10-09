@@ -1,9 +1,9 @@
 package com.example.demo.model
 
+import com.example.demo.exceptions.UserOfferException
 import com.example.demo.service.CryptoService
 import jakarta.persistence.*
 import java.util.Date
-import java.util.concurrent.TimeoutException
 import kotlin.math.abs
 
 @Entity
@@ -127,7 +127,7 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
         if (this.offerStatus == OfferStatus.UNVAILABLE ||
             this.user!!.id == userId.toLong()                 // Cambiar ?
         ){
-            throw TimeoutException("validateCancelTheOffer") // mirar
+            throw UserOfferException("it cannot validate the cancellation of the offer")
         }
     }
 

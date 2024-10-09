@@ -2,7 +2,7 @@ package com.example.demo.model
 
 
 //import com.example.demo.exceptions.CryptoNotFoundException
-import com.example.demo.service.Proxys.ProxyBinance
+//import com.example.demo.service.Proxys.ProxyBinance
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

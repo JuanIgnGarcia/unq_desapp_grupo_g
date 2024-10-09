@@ -1,9 +1,9 @@
 package com.example.demo.model
 
+import com.example.demo.exceptions.UserException
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.util.concurrent.TimeoutException
 import kotlin.test.assertNotNull
 
 
@@ -319,7 +319,7 @@ class UserTest {
             .mountCompletedTransactions(0)
             .build()
 
-        assertThrows<TimeoutException> { // mirar
+        assertThrows<UserException> { // mirar
             user.userUpdateForFinishTransaction(-1)
         }
     }

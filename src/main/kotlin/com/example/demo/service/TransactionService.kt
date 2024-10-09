@@ -3,8 +3,8 @@ package com.example.demo.service
 import com.example.demo.dto.CryptoTransactionDto
 import com.example.demo.dto.TransactionDTO
 import com.example.demo.dto.TransactionPeriodDTO
+import com.example.demo.exceptions.*
 import com.example.demo.model.*
-//import com.example.demo.exceptions.OfferTypeException
 import com.example.demo.repository.TransactionRepository
 import com.example.demo.repository.UserOfferRepository
 import com.example.demo.repository.UserRepository
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.ZoneId
 import java.util.*
-import java.util.concurrent.TimeoutException
 
 @Generated
 @Service
@@ -49,14 +48,14 @@ class TransactionService {
             return transactionDTO
 
         }catch (e: Exception) {
-            throw TimeoutException("Failed to create transaction: ${e.message}") //TransactionCreationException("Failed to create transaction: ${e.message}")
+            throw TransactionCreationException("Failed to create transaction: ${e.message}")
         }
     }
 
     fun makeTransfer(userId: String, transactionId: String) {
         val user = findUser(userId)
         val transaction = transactionRepository.findById(transactionId.toLong()).
-        orElseThrow{ throw TimeoutException("Offer $transactionId not found") //TransactionNotFoundException("Transaction $transactionId not found")
+        orElseThrow{ throw TransactionNotFoundException("Transaction $transactionId not found")
         }
         transaction.makeTransfer(user)
         transactionRepository.save(transaction)
@@ -65,7 +64,7 @@ class TransactionService {
     fun confirmReceipt(userId: String, transactionId: String) {
         val user = findUser(userId)
         val transaction = transactionRepository.findById(transactionId.toLong()).
-        orElseThrow{ throw TimeoutException("Offer $transactionId not found") //TransactionNotFoundException("Transaction $transactionId not found")
+        orElseThrow{ throw TransactionNotFoundException("Transaction $transactionId not found")
         }
         transaction.confirmReceipt(user)
         transactionRepository.save(transaction)
@@ -74,7 +73,7 @@ class TransactionService {
     fun cancelTransaction(userId: String, transactionId: String) {
         val user = findUser(userId)
         val transaction = transactionRepository.findById(transactionId.toLong()).
-        orElseThrow{ throw TimeoutException("Offer $transactionId not found") //TransactionNotFoundException("Transaction $transactionId not found")
+        orElseThrow{ throw TransactionNotFoundException("Transaction $transactionId not found")
         }
         transaction.cancelTransaction(user)
         transactionRepository.save(transaction)
@@ -88,13 +87,13 @@ class TransactionService {
 
     private fun findUser(userId: String): User<Any?> {  // refactor
         return userRepository.findById(userId.toLong()).
-        orElseThrow{ throw TimeoutException("Offer $userId not found") //UserNotFoundException("User $userId not found")
+        orElseThrow{ throw UserNotFoundException("User $userId not found")
         }
     }
 
     private fun findUserOffer(offerId: String): UserOffer {  // refactor
         return userOfferRepository.findById(offerId.toLong()).
-        orElseThrow { throw TimeoutException("Offer $offerId not found:") //UserOfferNotFoundException("Offer $offerId not found")
+        orElseThrow { throw UserOfferNotFoundException("Offer $offerId not found")
         }
     }
 
@@ -103,7 +102,7 @@ class TransactionService {
             OfferType.BUY  -> offer.user!!.cryptoAddress!!
             OfferType.SELL -> offer.user!!.cvuMercadoPago!!
             else -> {
-                throw TimeoutException("Invalid Offer type") // throw OfferTypeException("Invalid Offer type")
+                throw OfferTypeException("Invalid Offer type")
             }
         }
     }

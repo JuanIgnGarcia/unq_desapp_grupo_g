@@ -1,9 +1,9 @@
 package com.example.demo.model
 
+import com.example.demo.exceptions.TransactionException
 import jakarta.persistence.*
 import java.util.Date
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeoutException
 
 @Entity
 @Table(name = "transaction_table")
@@ -102,7 +102,7 @@ class Transaction(builder: TransactionBuilder) {
     private fun validateUsers(user: User<Any?>) {
         if( user != this.acceptingUser &&
             user != this.offer!!.user() ){
-            throw TimeoutException("The user ${user.id} doesn't participe in that transaction") // tirar otro exception
+            throw TransactionException("The user ${user.id} doesn't participe in that transaction")
         }
     }
 
@@ -120,7 +120,7 @@ class Transaction(builder: TransactionBuilder) {
             !validateTransactionStatus() ||
             !this.offer!!.isABuy()
            ){
-            throw TimeoutException("error") // tirar otro exception
+            throw TransactionException("Transaction doesnt satify some condition")
         }
     }
 
@@ -129,7 +129,7 @@ class Transaction(builder: TransactionBuilder) {
             !validateTransactionStatus() ||
             !this.offer!!.isASell()
         ){
-            throw TimeoutException("error") // tirar otro exception
+            throw TransactionException("Transaction doesnt satify some condition")
         }
     }
 

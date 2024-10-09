@@ -1,7 +1,7 @@
 package com.example.demo.model
 
+import com.example.demo.exceptions.UserException
 import jakarta.persistence.*
-import java.util.concurrent.TimeoutException
 import java.util.regex.Pattern
 import kotlin.math.max
 
@@ -132,7 +132,8 @@ class User<Date> private constructor(builder: UserBuilder) {
     }
 
     private fun reputationPointsToaAdd(transactionDuration: Long): Int {
-        if(transactionDuration < 0){throw TimeoutException("Time error")} // mirar
+        if(transactionDuration < 0){throw UserException("Transaction duration error")
+        }
         return when (transactionDuration <= 30) {
             true  -> 10
             false -> 5
