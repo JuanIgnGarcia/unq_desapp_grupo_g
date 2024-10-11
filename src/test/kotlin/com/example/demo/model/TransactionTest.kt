@@ -359,6 +359,54 @@ class TransactionTest {
 
     }
 
+    @Test
+    fun `should give the total amount`() {
+        val totalAmount = 10.00
+
+        val offer = mockk<UserOffer>()
+        val acceptingUser = mockk<User<Any?>>(relaxed = true)
+
+        every { offer.isAvailable() } returns true
+        every { offer.totalAmount() } returns totalAmount
+        every { offer.avalidate() } just Runs
+        every { offer.user() } returns mockk()
+
+        every { acceptingUser != any() } returns true
+
+        val transaction = Transaction.TransactionBuilder()
+            .offer(offer)
+            .acceptingUser(acceptingUser)
+            .startTime(Date())
+            .transactionStatus(TransactionStatus.ACTIVE)
+            .build()
+
+        assertEquals(transaction.totalAmount(), totalAmount)
+    }
+
+    @Test
+    fun `should give the total amount ARG`() {
+        val totalAmountARG = 10.00
+
+        val offer = mockk<UserOffer>()
+        val acceptingUser = mockk<User<Any?>>(relaxed = true)
+
+        every { offer.isAvailable() } returns true
+        every { offer.argsMounts() } returns totalAmountARG
+        every { offer.avalidate() } just Runs
+        every { offer.user() } returns mockk()
+
+        every { acceptingUser != any() } returns true
+
+        val transaction = Transaction.TransactionBuilder()
+            .offer(offer)
+            .acceptingUser(acceptingUser)
+            .startTime(Date())
+            .transactionStatus(TransactionStatus.ACTIVE)
+            .build()
+
+        assertEquals(transaction.totalAmountArgs(), totalAmountARG)
+    }
+
 
 
 }

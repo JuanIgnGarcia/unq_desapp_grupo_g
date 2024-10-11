@@ -99,6 +99,14 @@ class Transaction(builder: TransactionBuilder) {
         user.userUpdateForCancelTransaction()
     }
 
+    fun totalAmount() : Double  {
+        return this.offer!!.totalAmount()
+    }
+
+    fun totalAmountArgs() : Double{
+        return this.offer!!.argsMounts()
+    }
+
     private fun validateUsers(user: User<Any?>) {
         if( user != this.acceptingUser &&
             user != this.offer!!.user() ){
@@ -141,12 +149,5 @@ class Transaction(builder: TransactionBuilder) {
         return user == this.offer!!.user()
     }
 
-    fun totalAmount() : Double  {
-        return this.offer!!.totalAmount()
-    }
-
-    fun totalAmountArgs() : Double{
-        return this.offer!!.argsMounts()
-    }
 
 }
