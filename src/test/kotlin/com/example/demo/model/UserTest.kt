@@ -258,21 +258,21 @@ class UserTest {
         }
     }
 
-    /*  Como testear == ?
     @Test
-    fun `should be the same user`() {
-        val user = User.UserBuilder().id(1).build()
-        assertTrue(user == user)
-        }
+    fun `should be the same user for the id`() {
+        val user = User.UserBuilder().id(1).email("Marcos.dias@example.com").build()
+        val user2 = User.UserBuilder().id(1).email("Marcos.dias@example.com").build()
+        assertTrue(user == user2)
+
     }
 
     @Test
     fun `should not be the same user`() {
-        val user = User.UserBuilder().id(1).build()
-        val user2 = User.UserBuilder().id(2).build()
+        val user = User.UserBuilder().id(1).email("Marcos.dias@example.com").build()
+        val user2 = User.UserBuilder().id(2).email("Marcos.dias@example.com").build()
         assertFalse(user == user2)
     }
-  */
+
 
 
     @Test
@@ -300,7 +300,7 @@ class UserTest {
     }
 
     @Test
-    fun `should increase 10 points and 1 transaction for transactionDuration over 30 min `() {
+    fun `should increase 5 points and 1 transaction for transactionDuration over 30 min `() {
         val user = User.UserBuilder()
             .point(0)
             .mountCompletedTransactions(0)
@@ -311,7 +311,6 @@ class UserTest {
         assertEquals(1,user.mountCompletedTransactions)
     }
 
-
     @Test
     fun `should throw exception for negative time`() {
         val user = User.UserBuilder()
@@ -319,7 +318,7 @@ class UserTest {
             .mountCompletedTransactions(0)
             .build()
 
-        assertThrows<UserException> { // mirar
+        assertThrows<UserException> {
             user.userUpdateForFinishTransaction(-1)
         }
     }
@@ -367,6 +366,44 @@ class UserTest {
         assertEquals(1, user.mountCompletedTransactions)
         assertEquals(0, user.point)
     }
+
+    @Test
+    fun `should be the hash code`() {
+        val user = User.UserBuilder()
+            .id(1)
+            .build()
+
+        assertEquals(1, user.id)
+        assertEquals(1.hashCode(), user.hashCode())
+    }
+
+    @Test
+    fun `should be not the hash code`() {
+        val user = User.UserBuilder()
+            .id(1)
+            .build()
+
+        assertNotEquals(2.hashCode(), user.hashCode())
+    }
+
+    @Test
+    fun `should be the id`() {
+        val user = User.UserBuilder()
+            .id(1)
+            .build()
+
+        assertEquals(1, user.id)
+    }
+
+    @Test
+    fun `should be not the id`() {
+        val user = User.UserBuilder()
+            .id(1)
+            .build()
+
+        assertNotEquals(2, user.id)
+    }
+
 
 
 }

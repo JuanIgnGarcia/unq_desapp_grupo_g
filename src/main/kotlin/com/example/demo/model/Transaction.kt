@@ -2,7 +2,7 @@ package com.example.demo.model
 
 import com.example.demo.exceptions.TransactionException
 import jakarta.persistence.*
-import java.util.Date
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 @Entity
@@ -11,7 +11,7 @@ class Transaction(builder: TransactionBuilder) {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null  // Borrar ? (esta para que compile)
+    var id: Long? = null
 
     @ManyToOne
     @JoinColumn(name = "offer_id")
@@ -71,7 +71,7 @@ class Transaction(builder: TransactionBuilder) {
     }
 
     fun makeTransfer(user: User<Any?>) {
-        val finishTime = Date() // "+ ventaja a los usuarios para mejor experiencia"
+        val finishTime = Date()
 
         validateTransaction(user)
         val transactionDuration = minutesElapsed(this.startTime!!,finishTime)
@@ -93,7 +93,7 @@ class Transaction(builder: TransactionBuilder) {
     }
 
     fun cancelTransaction(user: User<Any?>) {
-        validateUsers(user)
+        validateUsers(user) // Falta validar transactionStatus deberia estar ACTIVE
         this.transactionStatus = TransactionStatus.CANCEL
         this.offer!!.avalidate()
         user.userUpdateForCancelTransaction()

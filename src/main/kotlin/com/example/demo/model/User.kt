@@ -11,7 +11,7 @@ class User<Date> private constructor(builder: UserBuilder) {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
+    val id: Long? = builder.id
     @Column
     var name: String? = builder.name
     @Column
@@ -33,6 +33,8 @@ class User<Date> private constructor(builder: UserBuilder) {
 
 
     class UserBuilder {
+        var id: Long? = null
+            private set
         var name: String? = null
             private set
         var lastName: String? = null
@@ -51,6 +53,10 @@ class User<Date> private constructor(builder: UserBuilder) {
             private set
         var mountCompletedTransactions: Int? = null // refactor amountCompletedTransactions
             private set
+
+        fun id(id: Long) = apply {
+            this.id = id
+        }
 
         fun name(name: String) = apply {
             require(name.length in 3..30) { "The name must be between 3 and 30 characters long." }

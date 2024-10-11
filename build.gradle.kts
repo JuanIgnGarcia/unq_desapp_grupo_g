@@ -7,6 +7,8 @@ val SPRINGDOC_OPENAPI= "2.0.3"
 val LOGGING_INTERCEPTOR= "4.9.2"
 val OKHTTP= "4.9.3"
 val GSON= "2.8.9"
+val MOCKK_VERSION = "1.13.13"
+val SPRING_MOCKK_VERSION = "4.0.2"
 
 plugins {
 	kotlin("jvm") version "1.9.25"
@@ -49,9 +51,7 @@ dependencies {
 	implementation ("com.squareup.okhttp3:okhttp:$OKHTTP")
 	implementation ("com.google.code.gson:gson:$GSON")
 
-
-
-
+	testImplementation("io.mockk:mockk:$MOCKK_VERSION")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testImplementation("org.springframework.security:spring-security-test")
