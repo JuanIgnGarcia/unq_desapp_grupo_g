@@ -3,14 +3,15 @@ package com.example.demo
 import com.example.demo.model.*
 import com.example.demo.request.UserOfferRequest
 import com.example.demo.service.CryptoService
-import com.example.demo.service.Proxys.ProxyBinance
 import com.example.demo.service.TransactionService
 import com.example.demo.service.UserOfferService
 import com.example.demo.service.UserService
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
 import java.util.*
+import org.springframework.aot.generate.Generated
 
+@Generated
 @Component
 class DataLoader(private val userService: UserService, private val userOfferService : UserOfferService, private val cryptoService:CryptoService, private val transactionService : TransactionService) : CommandLineRunner {
 
