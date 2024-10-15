@@ -13,7 +13,7 @@ class ProxyUsdPrice {
 
 
     private val apiUrl = "https://api.estadisticasbcra.com/usd_of"
-    private val token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTg1ODQ4OTEsInR5cGUiOiJleHRlcm5hbCIsInVzZXIiOiJiZXJuYWxqdWxpYW5lQGdtYWlsLmNvbSJ9.KuIW-kN3GKsWDbytyjf6VyJ55eJJ4X3V_D-RiNhKIdtkZOwgAE3-n0TpUyRsm42e9p2jsX6JOVREXjRUGpQrBw" // Reemplaza con tu token
+    private val token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjA0MTMzMDMsInR5cGUiOiJleHRlcm5hbCIsInVzZXIiOiJwaXlveG9wNDgwQHJvd3BsYW50LmNvbSJ9.8PshhrGdV4ftQ0nctBk6zTgNIRDZcNmEJuEqQqs0mtRofFNHekrOCpiUA2tstV1A2n64l1kYZfp711_bGxPVIA" // Reemplaza con tu token
 
     fun lastUsdPrice(): UsdPrice {
         val client = OkHttpClient()

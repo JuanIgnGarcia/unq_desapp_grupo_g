@@ -55,6 +55,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testImplementation("org.springframework.security:spring-security-test")
+	testImplementation ("io.rest-assured:rest-assured:5.5.0")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 

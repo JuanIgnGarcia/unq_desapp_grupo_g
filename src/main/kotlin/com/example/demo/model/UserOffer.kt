@@ -61,7 +61,7 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
         }
 
         fun cryptoPrice(cryptoPrice: Double) = apply {
-            require(isValidCryptoPrice(cryptoPrice)) { "The crypto price not valid." }
+            //require(isValidCryptoPrice(cryptoPrice)) { "The crypto price not valid." }
             this.cryptoPrice = cryptoPrice
         }
 
@@ -89,16 +89,8 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
             return UserOffer(this)
         }
 
-        private fun percentageDifference(price1 : Double, price2 : Double) : Boolean {
-            val difference  = abs(price1 - price2)
-            val allowedMargin = price1 * 0.05
-            return difference <= allowedMargin
-        }
 
-        private fun isValidCryptoPrice(cryptoPrice: Double): Boolean {
-            val lastCryptoValue = CryptoService().getCrypto(cryptoSymbol!!).price.toDouble()
-            return percentageDifference(cryptoPrice,lastCryptoValue)
-        }
+
     }
 
     fun userName() : String {  return this.user!!.userName() }

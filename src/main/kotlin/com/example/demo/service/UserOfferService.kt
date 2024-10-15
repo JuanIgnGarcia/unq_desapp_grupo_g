@@ -14,6 +14,7 @@ import org.springframework.aot.generate.Generated
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
+import kotlin.math.abs
 
 @Generated
 @Service
@@ -30,8 +31,8 @@ class UserOfferService {
             val userOffer = this.createUserOffer(userOfferRequest)
             userOfferRepository.save(userOffer)
             return userOffer
-        }catch (e: Exception) {
-            throw UserOfferCreationException("Failed to create user: ${e.message}")
+       }catch (e: Exception) {
+                throw UserOfferCreationException("Failed to create user: ${e.message}")
         }
     }
 
@@ -47,13 +48,14 @@ class UserOfferService {
         val user = userRepository.findById(userOfferRequest.userId.toLong())
             .orElseThrow { throw  UserNotFoundException("user with id ${userOfferRequest.userId} dont exist")}
 
+        val cryptoPriceResult = cryptoCheck(userOfferRequest.cryptoPrice, userOfferRequest.cryptoSymbol)
         val totalArgsMounts = calculateThePriceInPesos(userOfferRequest.cryptoPrice,userOfferRequest.cryptoMounts)
 
         val newUserOffer =                       // pasarlo a otro lado
             UserOffer.UserOfferBuilder()
                 .cryptoSymbol(userOfferRequest.cryptoSymbol)
                 .cryptoMounts(userOfferRequest.cryptoMounts)
-                .cryptoPrice(userOfferRequest.cryptoPrice)
+                .cryptoPrice(cryptoPriceResult)
                 .argsMounts(totalArgsMounts)
                 .user(user)
                 .offerDate(Date())
@@ -86,5 +88,22 @@ class UserOfferService {
         }
     }
 
+    private fun cryptoCheck(cryptoPrice: Double, cryptoSymbol:String): Double{
+        if(isValidCryptoPrice(cryptoPrice, cryptoSymbol)){
+            return cryptoPrice
+        }
+        else{
+            throw UserOfferCreationException("The crypto Price $cryptoPrice not valid")
+        }
+    }
+    private fun isValidCryptoPrice(cryptoPrice: Double, cryptoSymbol:String): Boolean {
+        val lastCryptoValue = CryptoService().getCrypto(cryptoSymbol).price.toDouble()
+        return percentageDifference(cryptoPrice,lastCryptoValue)
+    }
+    private fun percentageDifference(price1 : Double, price2 : Double) : Boolean {
+        val difference  = abs(price1 - price2)
+        val allowedMargin = price1 * 0.05
+        return difference <= allowedMargin
+    }
 }
 

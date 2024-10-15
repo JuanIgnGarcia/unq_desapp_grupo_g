@@ -3,9 +3,11 @@ package com.example.demo.model
 
 //import com.example.demo.exceptions.CryptoNotFoundException
 //import com.example.demo.service.Proxys.ProxyBinance
+import io.mockk.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.util.*
 
 
 class UserOfferTest {
@@ -84,8 +86,9 @@ class UserOfferTest {
 
     @Test
     fun `should give the user name`() {
-        val user = User.UserBuilder().name("Mariana").build()
-        val userOffer = UserOffer.UserOfferBuilder().user(user).build()
+        val userM = mockk<User<Any?>>(relaxed = true)
+        every { userM.userName() } returns ("Mariana")
+        val userOffer = UserOffer.UserOfferBuilder().user(userM).build()
 
         assertEquals(userOffer.userName(),"Mariana")
     }
@@ -102,8 +105,9 @@ class UserOfferTest {
 
     @Test
     fun `should give the user last name`() {
-        val user = User.UserBuilder().lastName("Lopez").build()
-        val userOffer = UserOffer.UserOfferBuilder().user(user).build()
+        val userM = mockk<User<Any?>>(relaxed = true)
+        every { userM.userLastName() } returns ("Lopez")
+        val userOffer = UserOffer.UserOfferBuilder().user(userM).build()
 
         assertEquals(userOffer.userLastName(),"Lopez")
     }
@@ -120,10 +124,13 @@ class UserOfferTest {
 
     @Test
     fun `should give the user`() {
-        val user = User.UserBuilder().lastName("Lopez").build()
-        val userOffer = UserOffer.UserOfferBuilder().user(user).build()
+        val userM = mockk<User<Any?>>(relaxed = true)
+        every { userM.userLastName() } returns ("Lopez")
 
-        assertEquals(userOffer.user(),user)
+        val userOffer = UserOffer.UserOfferBuilder().user(userM).build()
+
+        assertEquals(userOffer.user(),userM)
+        assertEquals(userOffer.user().userLastName(),"Lopez")
     }
 
     @Test
@@ -173,17 +180,28 @@ class UserOfferTest {
     }
 
 
-    /* usar MOCK
     @Test
-    fun `should finish the offer succesfully `() {
-        val user = User.UserBuilder().mountCompletedTransactions(0).point(0).build()
-        val userOffer = UserOffer.UserOfferBuilder().offerStatus(OfferStatus.AVAILABLE).build()
+    fun `should finish the offer succesfully`() {
+        val userM = mockk<User<Any?>>(relaxed = true)
+        val offer = UserOffer.UserOfferBuilder()
+                .user(userM)
+                .offerType(OfferType.BUY)
+                .offerStatus(OfferStatus.AVAILABLE)
+                .build()
 
-        userOffer.finishSuccessfullyOffer(5)
+        every { userM.point } returns 0
+        every { userM.mountCompletedTransactions } returns 0
+        every { userM.userUpdateForFinishTransaction(any()) } just Runs
+        every { userM == any() } returns true
 
-        assertEquals(userOffer.offerStatus,OfferStatus.UNVAILABLE)
+
+
+        offer.finishSuccessfullyOffer(5)
+
+
+        verify { userM.userUpdateForFinishTransaction(any()) }
+        assertEquals(OfferStatus.UNVAILABLE, offer.offerStatus)
     }
-    */
 
 
 
