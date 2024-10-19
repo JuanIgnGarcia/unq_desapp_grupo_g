@@ -124,4 +124,8 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
 
     fun argsMounts() : Double {return this.argsMounts!! }
 
+    fun cryptoSymbol() : String {return this.cryptoSymbol!! }
+
+    fun cryptoPrice() : Double {return this.cryptoPrice!! }
+
 }

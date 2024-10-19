@@ -75,7 +75,7 @@ class UserOfferController {
     }
 
     @Operation(summary = "Cancel a active transaction")
-    @PostMapping("/offer/cancel/{userId}/{offerId}")
+    @DeleteMapping("/offer/cancel/{userId}/{offerId}")
     fun cancelOffer(@PathVariable userId: String, @PathVariable offerId: String): ResponseEntity<Unit> {
         service.cancelOffer(userId,offerId)
         return ResponseEntity(HttpStatus.NO_CONTENT)

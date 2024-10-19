@@ -24,6 +24,7 @@ class TransactionService {
     lateinit var userOfferRepository : UserOfferRepository
     @Autowired
     lateinit var userRepository : UserRepository
+    var cryptoService = CryptoService()
 
     fun createTransaction(userId: String, offerId: String) : TransactionDTO {
 
@@ -57,6 +58,7 @@ class TransactionService {
         val transaction = transactionRepository.findById(transactionId.toLong()).
         orElseThrow{ throw TransactionNotFoundException("Transaction $transactionId not found")
         }
+        validatePriceInASale(transaction)
         transaction.makeTransfer(user)
         transactionRepository.save(transaction)
     }
@@ -66,6 +68,7 @@ class TransactionService {
         val transaction = transactionRepository.findById(transactionId.toLong()).
         orElseThrow{ throw TransactionNotFoundException("Transaction $transactionId not found")
         }
+        validatePriceInAPurchase(transaction)
         transaction.confirmReceipt(user)
         transactionRepository.save(transaction)
     }
@@ -83,6 +86,38 @@ class TransactionService {
         val transactions = transactionRepository.findAll().map { transaction -> transactionToDto(transaction,mailingAddress(transaction.offer!!))}
 
         return transactions
+    }
+
+    fun allTransactionsDuringThePeriod(userId: String, startDate: java.time.LocalDate, endDate: java.time.LocalDate): TransactionPeriodDTO {
+
+        require(startDate.isBefore(endDate)) { "La fecha de inicio debe ser anterior a la fecha de fin." }
+
+
+        val startOfDay: Date = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+        val endOfDay: Date = Date.from(endDate.atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant())
+
+        val transactions = transactionRepository.findAllByOfferUserIdAndStartTimeBetweenAndTransactionStatus(
+            userId.toLong(),
+            startOfDay,
+            endOfDay,
+            TransactionStatus.CANCEL
+        )
+
+        val transactionsPeriod = TransactionPeriodDTO(
+            date = Date(),
+            totalAmount = transactions.sumOf { transaction -> transaction.totalAmount() },
+            totalAmountArgs = transactions.sumOf { transaction -> transaction.totalAmountArgs() },
+            cryptos  = transactions.map{
+                    transaction -> CryptoTransactionDto(
+                cryptoSymbol = transaction.offer!!.cryptoSymbol!!,
+                cryptoAmount = transaction.offer!!.cryptoMounts!!,
+                cryptoPrice = transaction.offer!!.cryptoPrice!!,
+                cryptoPriceArg = transaction.offer!!.argsMounts!!
+            )
+            }
+        )
+
+        return transactionsPeriod
     }
 
     private fun findUser(userId: String): User<Any?> {  // refactor
@@ -127,36 +162,18 @@ class TransactionService {
         return transactionDTO
     }
 
-    fun allTransactionsDuringThePeriod(userId: String, startDate: java.time.LocalDate, endDate: java.time.LocalDate): TransactionPeriodDTO {
+    private fun validatePriceInAPurchase(transaction: Transaction?) {
+        val actualPrice = cryptoService.getCrypto(transaction!!.cryptoSymbol()).price.toDouble()
+        if(actualPrice > transaction.cryptoPrice()){
+            throw TransactionPriceException("The transaction price is below the current price")
+        }
+    }
 
-        require(startDate.isBefore(endDate)) { "La fecha de inicio debe ser anterior a la fecha de fin." }
-
-
-        val startOfDay: Date = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
-        val endOfDay: Date = Date.from(endDate.atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant())
-
-        val transactions = transactionRepository.findAllByOfferUserIdAndStartTimeBetweenAndTransactionStatus(
-            userId.toLong(),
-            startOfDay,
-            endOfDay,
-            TransactionStatus.CANCEL
-        )
-
-        val transactionsPeriod = TransactionPeriodDTO(
-            date = Date(),
-            totalAmount = transactions.sumOf { transaction -> transaction.totalAmount() },
-            totalAmountArgs = transactions.sumOf { transaction -> transaction.totalAmountArgs() },
-            cryptos  = transactions.map{
-                transaction -> CryptoTransactionDto(
-                    cryptoSymbol = transaction.offer!!.cryptoSymbol!!,
-                    cryptoAmount = transaction.offer!!.cryptoMounts!!,
-                    cryptoPrice = transaction.offer!!.cryptoPrice!!,
-                    cryptoPriceArg = transaction.offer!!.argsMounts!!
-                )
-            }
-        )
-
-        return transactionsPeriod
+    private fun validatePriceInASale(transaction: Transaction?) {
+        val actualPrice = cryptoService.getCrypto(transaction!!.cryptoSymbol()).price.toDouble()
+        if(actualPrice < transaction.cryptoPrice()){
+            throw TransactionPriceException("The transaction price is above the current price")
+        }
     }
 
 }

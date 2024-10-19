@@ -1,7 +1,6 @@
 package com.example.demo.model
 
 import com.example.demo.exceptions.TransactionException
-import com.example.demo.exceptions.UserException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -28,35 +27,25 @@ class TransactionTest {
         assertEquals("The offer is unavailable.", exception.message)
     }
 
-    /*  Para identificar diferentes user usar mail ?
-    @Test
-    fun `should create a transaction with a differnt users`() {
-        val user = User.UserBuilder().id(1).build()
-        val acceptingUser = User.UserBuilder().id(2).build()
-
-        val offer = UserOffer.UserOfferBuilder().user(user).build()
-        val transaction = Transaction.TransactionBuilder()
-            .offer(offer)
-            .acceptingUser(acceptingUser)
-            .build()
-
-        assertEquals(offer, transaction.offer)
-    }
-
     @Test
     fun `should throw exception for transaction with a same user`() {
-        val user = User.UserBuilder().id(1).build()
-        val offer = UserOffer.UserOfferBuilder().user(user).build()
+        val offer = mockk<UserOffer>()
+        val acceptingUser = mockk<User<Any?>>(relaxed = true)
+
+        every { offer.isAvailable() } returns true
+        every { offer.user() } returns acceptingUser
+        every { offer.isABuy() } returns true
+        every { offer.finishSuccessfullyOffer(any()) } just Runs
 
         val exception = assertThrows<IllegalArgumentException> {
             Transaction.TransactionBuilder()
                 .offer(offer)
-                .acceptingUser(user)
+                .acceptingUser(acceptingUser)
                 .build()
         }
         assertEquals("A single user can not bid on their own offer.", exception.message)
     }
-*/
+
 
     @Test
     fun `should create a transaction with a date`() {
@@ -405,6 +394,46 @@ class TransactionTest {
             .build()
 
         assertEquals(transaction.totalAmountArgs(), totalAmountARG)
+    }
+
+    @Test
+    fun `should give the crytoSymbol`() {
+
+        val offer = mockk<UserOffer>()
+        val acceptingUser = mockk<User<Any?>>(relaxed = true)
+
+        every { offer.isAvailable() } returns true
+        every { offer.cryptoSymbol() } returns "AAA"
+        every { offer.user() } returns mockk()
+
+        val transaction = Transaction.TransactionBuilder()
+            .offer(offer)
+            .acceptingUser(acceptingUser)
+            .startTime(Date())
+            .transactionStatus(TransactionStatus.ACTIVE)
+            .build()
+
+        assertEquals(transaction.cryptoSymbol(), "AAA")
+    }
+
+    @Test
+    fun `should give the cryptoPrice`() {
+
+        val offer = mockk<UserOffer>()
+        val acceptingUser = mockk<User<Any?>>(relaxed = true)
+
+        every { offer.isAvailable() } returns true
+        every { offer.cryptoPrice() } returns 1.0
+        every { offer.user() } returns mockk()
+
+        val transaction = Transaction.TransactionBuilder()
+            .offer(offer)
+            .acceptingUser(acceptingUser)
+            .startTime(Date())
+            .transactionStatus(TransactionStatus.ACTIVE)
+            .build()
+
+        assertEquals(transaction.cryptoPrice(), 1.0)
     }
 
 

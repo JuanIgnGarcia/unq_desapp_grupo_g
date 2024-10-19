@@ -1,14 +1,10 @@
 package com.example.demo.model
 
-
-//import com.example.demo.exceptions.CryptoNotFoundException
-//import com.example.demo.service.Proxys.ProxyBinance
+import com.example.demo.exceptions.CryptoNotFoundException
 import io.mockk.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.util.*
-
 
 class UserOfferTest {
 
@@ -19,7 +15,7 @@ class UserOfferTest {
         userOffer.cryptoSymbol("AUDIOUSDT")
         assertEquals("AUDIOUSDT",userOffer.cryptoSymbol)
     }
-/*
+
     @Test
     fun `should throw exception for invalid crypto symbol `() {
         val exception = assertThrows<CryptoNotFoundException> {  // CryptoNotFoundException
@@ -27,7 +23,7 @@ class UserOfferTest {
         }
         assertEquals("Crypto symbol EE is not valid.", exception.message)
     }
-*/
+
     @Test
     fun `should create a user offer with a positive crypto mounts`() {
         val userOffer = UserOffer.UserOfferBuilder().cryptoMounts(3.00)
@@ -41,48 +37,6 @@ class UserOfferTest {
         }
         assertEquals("The crypto mounts cannot be negative.", exception.message)
     }
-
-    /*  funciona pero mejorar
-    @Test
-    fun `should create a user offer with a cryptoPrice in range`() {
-        val userOffer = UserOffer.UserOfferBuilder()
-        val cryptoPriceActual = ProxyBinance().cryptosPrices(arrayOf("AUDIOUSDT").toList()).first().price.toDouble()
-        userOffer.cryptoSymbol("AUDIOUSDT")
-        userOffer.cryptoPrice(cryptoPriceActual)
-         assertEquals(userOffer.cryptoPrice,cryptoPriceActual)
-    }
-
-    @Test
-    fun `should throw exception for cryptoPrice is under the range`() {
-        val exception = assertThrows<IllegalArgumentException> {
-            val userOffer = UserOffer.UserOfferBuilder()
-
-            var cryptoPriceActual = ProxyBinance().cryptosPrices(arrayOf("AUDIOUSDT").toList()).first().price.toDouble()
-            cryptoPriceActual -= (cryptoPriceActual * 0.06)
-
-            userOffer.cryptoSymbol("AUDIOUSDT")
-
-            userOffer.cryptoPrice(cryptoPriceActual)
-        }
-        assertEquals("The crypto price not valid.", exception.message)
-    }
-
-    @Test
-    fun `should throw exception for cryptoPrice is over the range`() {
-        val exception = assertThrows<IllegalArgumentException> {
-            val userOffer = UserOffer.UserOfferBuilder()
-
-            var cryptoPriceActual = ProxyBinance().cryptosPrices(arrayOf("AUDIOUSDT").toList()).first().price.toDouble()
-            cryptoPriceActual += (cryptoPriceActual * 0.06)
-
-            userOffer.cryptoSymbol("AUDIOUSDT")
-
-            userOffer.cryptoPrice(cryptoPriceActual)
-        }
-        assertEquals("The crypto price not valid.", exception.message)
-    }
-
-    */
 
     @Test
     fun `should give the user name`() {
@@ -201,6 +155,20 @@ class UserOfferTest {
 
         verify { userM.userUpdateForFinishTransaction(any()) }
         assertEquals(OfferStatus.UNVAILABLE, offer.offerStatus)
+    }
+
+    @Test
+    fun `should return the cryptoSymbol`() {
+        val userOffer = UserOffer.UserOfferBuilder().cryptoSymbol("AUDIOUSDT").build()
+
+        assertEquals(userOffer.cryptoSymbol(),"AUDIOUSDT")
+    }
+
+    @Test
+    fun `should return the cryptoPrice`() {
+        val userOffer = UserOffer.UserOfferBuilder().cryptoPrice(1.0).build()
+
+        assertEquals(userOffer.cryptoPrice(),1.0)
     }
 
 

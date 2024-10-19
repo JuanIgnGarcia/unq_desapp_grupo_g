@@ -149,5 +149,13 @@ class Transaction(builder: TransactionBuilder) {
         return user == this.offer!!.user()
     }
 
+    fun cryptoSymbol(): String {
+        return offer!!.cryptoSymbol()
+    }
+
+    fun cryptoPrice(): Double {
+        return offer!!.cryptoPrice()
+    }
+
 
 }
