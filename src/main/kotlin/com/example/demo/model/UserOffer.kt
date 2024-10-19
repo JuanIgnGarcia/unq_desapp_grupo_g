@@ -1,10 +1,8 @@
 package com.example.demo.model
 
 import com.example.demo.exceptions.UserOfferException
-import com.example.demo.service.CryptoService
 import jakarta.persistence.*
 import java.util.Date
-import kotlin.math.abs
 
 @Entity
 @Table(name = "userOffer_table")
@@ -61,7 +59,6 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
         }
 
         fun cryptoPrice(cryptoPrice: Double) = apply {
-            //require(isValidCryptoPrice(cryptoPrice)) { "The crypto price not valid." }
             this.cryptoPrice = cryptoPrice
         }
 

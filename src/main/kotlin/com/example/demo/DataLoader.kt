@@ -8,14 +8,12 @@ import com.example.demo.service.UserOfferService
 import com.example.demo.service.UserService
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
-import java.util.*
 import org.springframework.aot.generate.Generated
 
 @Generated
 @Component
 class DataLoader(private val userService: UserService, private val userOfferService : UserOfferService, private val cryptoService:CryptoService, private val transactionService : TransactionService) : CommandLineRunner {
 
-    //val proxyBinance = ProxyBinance()
 
     override fun run(vararg args: String?) {
         // Cargar datos iniciales
@@ -46,7 +44,6 @@ class DataLoader(private val userService: UserService, private val userOfferServ
 
         val offer1 = UserOfferRequest( cryptoSymbol = "ALICEUSDT",
                 cryptoMounts = 10.0,
-                //cryptoPrice = proxyBinance.cryptosPrices(listOf("ALICEUSDT")).first().price.toDouble(),
                 cryptoPrice = cryptoService.getCrypto("ALICEUSDT").price.toDouble(),
                 userId= "1",
                 offerType = "SELL")
@@ -72,7 +69,7 @@ class DataLoader(private val userService: UserService, private val userOfferServ
         userOfferService.publishOffer(offer1)
         userOfferService.publishOffer(offer2)
         userOfferService.publishOffer(offer3)
-        //transactionService.createTransaction("2","1")
+        transactionService.createTransaction("2","1")
 
 
     }
