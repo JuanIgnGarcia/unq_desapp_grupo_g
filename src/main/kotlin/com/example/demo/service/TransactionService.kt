@@ -90,17 +90,15 @@ class TransactionService {
 
     fun allTransactionsDuringThePeriod(userId: String, startDate: java.time.LocalDate, endDate: java.time.LocalDate): TransactionPeriodDTO {
 
-        require(startDate.isBefore(endDate)) { "La fecha de inicio debe ser anterior a la fecha de fin." }
-
-
+        require(startDate.isBefore(endDate)) { "The start date must be before the end date." }
         val startOfDay: Date = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
-        val endOfDay: Date = Date.from(endDate.atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant())
+        val endOfDay: Date = Date.from(endDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant())
 
         val transactions = transactionRepository.findAllByOfferUserIdAndStartTimeBetweenAndTransactionStatus(
             userId.toLong(),
             startOfDay,
             endOfDay,
-            TransactionStatus.CANCEL
+            TransactionStatus.CLOSE
         )
 
         val transactionsPeriod = TransactionPeriodDTO(
