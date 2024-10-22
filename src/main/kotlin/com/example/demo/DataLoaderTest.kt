@@ -1,6 +1,5 @@
 package com.example.demo
 
-
 import com.example.demo.model.*
 import com.example.demo.request.UserOfferRequest
 import com.example.demo.service.CryptoService
@@ -14,8 +13,8 @@ import org.springframework.context.annotation.Profile
 
 @Generated
 @Component
-@Profile("!test")
-class DataLoader(private val userService: UserService, private val userOfferService : UserOfferService, private val cryptoService:CryptoService, private val transactionService : TransactionService) : CommandLineRunner {
+@Profile("test")
+class DataLoaderTest(private val userService: UserService, private val userOfferService : UserOfferService, private val cryptoService:CryptoService, private val transactionService : TransactionService) : CommandLineRunner {
 
 
     override fun run(vararg args: String?) {
@@ -72,7 +71,7 @@ class DataLoader(private val userService: UserService, private val userOfferServ
         userOfferService.publishOffer(offer1)
         userOfferService.publishOffer(offer2)
         userOfferService.publishOffer(offer3)
-        transactionService.createTransaction("2","1")
+        //transactionService.createTransaction("2","1")
 
 
     }
