@@ -1,6 +1,7 @@
 package com.example.demo.model
 
-import org.junit.jupiter.api.Assertions.assertEquals
+import com.example.demo.exceptions.UserException
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertNotNull
@@ -186,11 +187,223 @@ class UserTest {
     }
 
     @Test
-    fun `should create a user with a short crypto Address`() {
+    fun `should throw exception for try to create a user with a short crypto Address`() {
         val exception = assertThrows<IllegalArgumentException> {
             User.UserBuilder().cryptoAddress("1234567")
         }
         assertEquals("The crypto wallet address must be 8 digits long.", exception.message)
     }
+
+    @Test
+    fun `should create a user with positive points`() {
+        val user = User.UserBuilder().point(1)
+
+        assertNotNull(user)
+        assertEquals(1, user.point)
+    }
+
+    @Test
+    fun `should throw exception for try to create a user with negative points`() {
+        val exception = assertThrows<IllegalArgumentException> {
+            User.UserBuilder().point(-1)
+        }
+        assertEquals("Points cannot be negative.", exception.message)
+    }
+
+    @Test
+    fun `should create a user with positive mountCompletedTransactions`() {
+        val user = User.UserBuilder().mountCompletedTransactions(1)
+
+        assertNotNull(user)
+        assertEquals(1, user.mountCompletedTransactions)
+    }
+
+    @Test
+    fun `should create a user with negative mountCompletedTransactions`() {
+        val exception = assertThrows<IllegalArgumentException> {
+            User.UserBuilder().mountCompletedTransactions(-1)
+        }
+        assertEquals("Completed transactions cannot be negative.", exception.message)
+    }
+
+    @Test
+    fun `should give user name`() {
+        val user = User.UserBuilder().name("Mariana").build()
+
+        assertEquals("Mariana", user.userName())
+    }
+
+    @Test
+    fun `should throw exception for null name`() {
+        val user = User.UserBuilder().build()
+
+        assertThrows<NullPointerException> {
+            user.userName()
+        }
+    }
+
+    @Test
+    fun `should give user lastname`() {
+        val user = User.UserBuilder().lastName("Lopez").build()
+
+        assertEquals("Lopez", user.userLastName())
+    }
+
+    @Test
+    fun `should throw exception for null lastname`() {
+        val user = User.UserBuilder().build()
+
+        assertThrows<NullPointerException> {
+            user.userLastName()
+        }
+    }
+
+    @Test
+    fun `should be the same user for the id`() {
+        val user = User.UserBuilder().id(1).email("Marcos.dias@example.com").build()
+        val user2 = User.UserBuilder().id(1).email("Marcos.dias@example.com").build()
+        assertTrue(user == user2)
+
+    }
+
+    @Test
+    fun `should not be the same user`() {
+        val user = User.UserBuilder().id(1).email("Marcos.dias@example.com").build()
+        val user2 = User.UserBuilder().id(2).email("Marcos.dias@example.com").build()
+        assertFalse(user == user2)
+    }
+
+
+
+    @Test
+    fun `should increase 10 points and 1 transaction for transactionDuration under 30 min`() {
+        val user = User.UserBuilder()
+            .point(0)
+            .mountCompletedTransactions(0)
+            .build()
+
+        user.userUpdateForFinishTransaction(15)
+        assertEquals(10, user.point)
+        assertEquals(1,user.mountCompletedTransactions)
+    }
+
+    @Test
+    fun `should increase 10 points and 1 transaction for transactionDuration 30 min `() {
+        val user = User.UserBuilder()
+            .point(0)
+            .mountCompletedTransactions(0)
+            .build()
+
+        user.userUpdateForFinishTransaction(30)
+        assertEquals(10, user.point)
+        assertEquals(1,user.mountCompletedTransactions)
+    }
+
+    @Test
+    fun `should increase 5 points and 1 transaction for transactionDuration over 30 min `() {
+        val user = User.UserBuilder()
+            .point(0)
+            .mountCompletedTransactions(0)
+            .build()
+
+        user.userUpdateForFinishTransaction(45)
+        assertEquals(5, user.point)
+        assertEquals(1,user.mountCompletedTransactions)
+    }
+
+    @Test
+    fun `should throw exception for negative time`() {
+        val user = User.UserBuilder()
+            .point(0)
+            .mountCompletedTransactions(0)
+            .build()
+
+        assertThrows<UserException> {
+            user.userUpdateForFinishTransaction(-1)
+        }
+    }
+
+    @Test
+    fun `should indicate reputation`() {
+        val user = User.UserBuilder()
+            .point(10)
+            .mountCompletedTransactions(2)
+            .build()
+
+        assertEquals(5, user.reputation())
+    }
+
+    @Test
+    fun `should indicate for divide by 0`() {
+        val user = User.UserBuilder()
+            .point(0)
+            .mountCompletedTransactions(0)
+            .build()
+
+        assertEquals(0, user.reputation())
+    }
+
+    @Test
+    fun `should decrease 20 points for cancel a transaction`() {
+        val user = User.UserBuilder()
+            .point(60)
+            .mountCompletedTransactions(6)
+            .build()
+
+        user.userUpdateForCancelTransaction()
+        assertEquals(6, user.mountCompletedTransactions)
+        assertEquals(40, user.point)
+    }
+
+    @Test
+    fun `should decrease 10 points for cancel a transaction becasuse the user have only 10 points`() {
+        val user = User.UserBuilder()
+            .point(10)
+            .mountCompletedTransactions(1)
+            .build()
+
+        user.userUpdateForCancelTransaction()
+        assertEquals(1, user.mountCompletedTransactions)
+        assertEquals(0, user.point)
+    }
+
+    @Test
+    fun `should be the hash code`() {
+        val user = User.UserBuilder()
+            .id(1)
+            .build()
+
+        assertEquals(1, user.id)
+        assertEquals(1.hashCode(), user.hashCode())
+    }
+
+    @Test
+    fun `should be not the hash code`() {
+        val user = User.UserBuilder()
+            .id(1)
+            .build()
+
+        assertNotEquals(2.hashCode(), user.hashCode())
+    }
+
+    @Test
+    fun `should be the id`() {
+        val user = User.UserBuilder()
+            .id(1)
+            .build()
+
+        assertEquals(1, user.id)
+    }
+
+    @Test
+    fun `should be not the id`() {
+        val user = User.UserBuilder()
+            .id(1)
+            .build()
+
+        assertNotEquals(2, user.id)
+    }
+
+
 
 }

@@ -1,15 +1,17 @@
 package com.example.demo.model
 
+import com.example.demo.exceptions.UserException
 import jakarta.persistence.*
 import java.util.regex.Pattern
+import kotlin.math.max
 
 @Entity
 @Table(name = "user_table")
-class User private constructor(builder: UserBuilder) {
+class User<Date> private constructor(builder: UserBuilder) {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
+    val id: Long? = builder.id
     @Column
     var name: String? = builder.name
     @Column
@@ -21,14 +23,18 @@ class User private constructor(builder: UserBuilder) {
     @Column
     var password: String? = builder.password
     @Column
-    var cvuMercadoPago: String? = builder.cvuMercadoPago
+    val cvuMercadoPago: String? = builder.cvuMercadoPago
     @Column
-    var cryptoAddress: String? = builder.cryptoAddress
+    val cryptoAddress: String? = builder.cryptoAddress
     @Column
     var point: Int = builder.point ?: 0
+    @Column
+    var mountCompletedTransactions: Int = builder.mountCompletedTransactions ?: 0
 
 
     class UserBuilder {
+        var id: Long? = null
+            private set
         var name: String? = null
             private set
         var lastName: String? = null
@@ -43,8 +49,14 @@ class User private constructor(builder: UserBuilder) {
             private set
         var cryptoAddress: String? = null
             private set
-        var point: Int? = null
+        var point: Int? = null  // refactor reputationPoints
             private set
+        var mountCompletedTransactions: Int? = null // refactor amountCompletedTransactions
+            private set
+
+        fun id(id: Long) = apply {
+            this.id = id
+        }
 
         fun name(name: String) = apply {
             require(name.length in 3..30) { "The name must be between 3 and 30 characters long." }
@@ -81,9 +93,17 @@ class User private constructor(builder: UserBuilder) {
             this.cryptoAddress = cryptoAddress
         }
 
-        fun point(point: Int) = apply { this.point = point }
+        fun point(point: Int) = apply {
+            require(point >= 0) { "Points cannot be negative." }
+            this.point = point
+        }
 
-        fun build(): User {
+        fun mountCompletedTransactions(mountCompletedTransactions: Int) = apply {
+            require(mountCompletedTransactions >= 0) { "Completed transactions cannot be negative." }
+            this.mountCompletedTransactions = mountCompletedTransactions
+        }
+
+        fun build(): User<Any?> {
             return User(this)
         }
 
@@ -99,4 +119,41 @@ class User private constructor(builder: UserBuilder) {
             return pattern.matcher(password).matches()
         }
     }
+
+    fun userName() : String = this.name!!
+
+    fun userLastName(): String = this.lastName!!
+
+    override fun equals(other: Any?): Boolean {
+        return (other is User<*>) && (this.id == other.id)
+    }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
+
+    fun userUpdateForFinishTransaction(transactionDuration: Long) {
+        this.mountCompletedTransactions += 1
+        this.point +=  this.reputationPointsToaAdd(transactionDuration)
+    }
+
+    private fun reputationPointsToaAdd(transactionDuration: Long): Int {
+        if(transactionDuration < 0){throw UserException("Transaction duration error")
+        }
+        return when (transactionDuration <= 30) {
+            true  -> 10
+            false -> 5
+        }
+    }
+
+    fun userUpdateForCancelTransaction() { this.point = max(0,this.point - 20) }
+
+    fun reputation(): Int {
+        return if(this.mountCompletedTransactions > 0){
+            this.point / this.mountCompletedTransactions
+        }else{
+            0
+        }
+    }
+
 }

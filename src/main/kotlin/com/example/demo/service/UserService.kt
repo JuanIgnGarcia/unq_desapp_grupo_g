@@ -5,14 +5,16 @@ import com.example.demo.model.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import com.example.demo.repository.UserRepository
+import org.springframework.aot.generate.Generated
 
+@Generated
 @Service
 class UserService {
 
     @Autowired
     lateinit var repo : UserRepository
 
-    fun createUser(user : User): User {
+    fun createUser(user : User<Any?>): User<Any?> {
         try {
             repo.save(user)
             return user
@@ -21,7 +23,7 @@ class UserService {
         }
     }
 
-    fun allUsers(): List<User>{
+    fun allUsers(): List<User<Any?>>{
         return repo.findAll()
     }
 

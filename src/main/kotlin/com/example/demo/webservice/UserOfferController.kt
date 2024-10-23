@@ -1,69 +1,84 @@
 package com.example.demo.webservice
 
 import com.example.demo.dto.UserOfferDTO
-import com.example.demo.model.OfferTypeHelper
 import com.example.demo.model.UserOffer
 import com.example.demo.request.UserOfferRequest
 import com.example.demo.service.UserOfferService
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
-import java.util.*
+import org.springframework.web.bind.annotation.*
+import org.springframework.aot.generate.Generated
 
-
+@Generated
 @RestController
 class UserOfferController {
 
     @Autowired
     lateinit var service: UserOfferService
 
-    @PostMapping("/Offer")
+    @Operation(summary = "Publish a new offer")
+    @PostMapping("/publish")
     fun publishOffer (@RequestBody userOfferRequest: UserOfferRequest): ResponseEntity<UserOfferDTO> {
-        val userOffer =
-            UserOffer.UserOfferBuilder()
-                .cryptoSymbol(userOfferRequest.cryptoSymbol)
-                .cryptoMounts(userOfferRequest.cryptoMounts)
-                .cryptoPrice(userOfferRequest.cryptoPrice)
-                .argsMounts(userOfferRequest.argsMounts)
-                .userName(userOfferRequest.userName)
-                .userLastName(userOfferRequest.userLastName)
-                .offerDate(Date())
-                .offerType(OfferTypeHelper.transform(userOfferRequest.offerType))
-                .build()
 
-        service.publishOffer(userOffer)
+        val userOffer = service.publishOffer(userOfferRequest)
 
         val userOfferDTO = UserOfferDTO(
+            userOffer.id!!.toString(),
             userOffer.cryptoSymbol!!,
             userOffer.cryptoMounts!!,
             userOffer.cryptoPrice!!,
             userOffer.argsMounts!!,
-            userOffer.userName!!,
-            userOffer.userLastName!!,
+            userOffer.userName(),
+            userOffer.userLastName(),
             userOffer.offerDate!!.toString(),
             userOffer.offerType!!.name)
 
         return ResponseEntity(userOfferDTO, HttpStatus.CREATED)
     }
 
+    @Operation(summary = "Get all user offers")
     @GetMapping("/offers")
     fun allUserOffers(): List<UserOfferDTO> {
         val usersOffers = service.allOffers().map {
             currentOfferUser: UserOffer ->
                 UserOfferDTO(
+                    currentOfferUser.id!!.toString(),
                     currentOfferUser.cryptoSymbol!!,
                     currentOfferUser.cryptoMounts!!,
                     currentOfferUser.cryptoPrice!!,
                     currentOfferUser.argsMounts!!,
-                    currentOfferUser.userName!!,
-                    currentOfferUser.userLastName!!,
+                    currentOfferUser.userName(),
+                    currentOfferUser.userLastName(),
                     currentOfferUser.offerDate!!.toString(),
                     currentOfferUser.offerType!!.name) }
         return usersOffers
+    }
+
+    @Operation(summary = "Get all user offers from User")
+    @GetMapping("/offers/{userId}")
+    fun allUserOffersFromAUser(@PathVariable userId: Long): List<UserOfferDTO> {
+        val usersOffers = service.allOffersFrom(userId).map {
+                currentOfferUser: UserOffer ->
+            UserOfferDTO(
+                currentOfferUser.id!!.toString(),
+                currentOfferUser.cryptoSymbol!!,
+                currentOfferUser.cryptoMounts!!,
+                currentOfferUser.cryptoPrice!!,
+                currentOfferUser.argsMounts!!,
+                currentOfferUser.userName(),
+                currentOfferUser.userLastName(),
+                currentOfferUser.offerDate!!.toString(),
+                currentOfferUser.offerType!!.name) }
+        return usersOffers
+    }
+
+    @Operation(summary = "Cancel a active transaction")
+    @DeleteMapping("/offer/cancel/{userId}/{offerId}")
+    fun cancelOffer(@PathVariable userId: String, @PathVariable offerId: String): ResponseEntity<Unit> {
+        service.cancelOffer(userId,offerId)
+        return ResponseEntity(HttpStatus.NO_CONTENT)
     }
 
 }

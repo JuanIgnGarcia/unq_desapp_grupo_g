@@ -4,6 +4,12 @@ val SWAGGER_SPRINGDOC_OPENAPI = "2.3.0"
 
 val SPRINGDOC_OPENAPI= "2.0.3"
 
+val LOGGING_INTERCEPTOR= "4.9.2"
+val OKHTTP= "4.9.3"
+val GSON= "2.8.9"
+val MOCKK_VERSION = "1.13.13"
+val SPRING_MOCKK_VERSION = "4.0.2"
+val REST_ASSURED = "5.5.0"
 
 plugins {
 	kotlin("jvm") version "1.9.25"
@@ -42,10 +48,15 @@ dependencies {
 	implementation("io.springfox:springfox-swagger2:$SWAGGER_VERSION")
 	implementation("io.springfox:springfox-swagger-ui:$SWAGGER_VERSION")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$SWAGGER_SPRINGDOC_OPENAPI")
+	implementation ("com.squareup.okhttp3:logging-interceptor:$LOGGING_INTERCEPTOR")
+	implementation ("com.squareup.okhttp3:okhttp:$OKHTTP")
+	implementation ("com.google.code.gson:gson:$GSON")
 
+	testImplementation("io.mockk:mockk:$MOCKK_VERSION")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testImplementation("org.springframework.security:spring-security-test")
+	testImplementation ("io.rest-assured:rest-assured:$REST_ASSURED")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 
@@ -73,6 +84,20 @@ tasks.jacocoTestReport {
 	reports {
 		xml.required.set(true)
 	}
+	classDirectories.setFrom(
+		files(classDirectories.files.map {
+			fileTree(it).matching {
+				exclude(
+					"**/src/main/kotlin/com/example/demo/dto/**",
+					"**/src/main/kotlin/com/example/demo/exceptions/**",
+					"**/src/main/kotlin/com/example/demo/repository/**",
+					"unq_desapp_grupo_g/src/main/kotlin/com/example/demo/request/**",
+					"unq_desapp_grupo_g/src/main/kotlin/com/example/demo/service/**",
+					"unq_desapp_grupo_g/src/main/kotlin/com/example/demo/webservice/**",
+				)
+			}
+		})
+	)
 }
 
 

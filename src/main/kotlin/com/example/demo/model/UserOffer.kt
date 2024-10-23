@@ -1,5 +1,6 @@
 package com.example.demo.model
 
+import com.example.demo.exceptions.UserOfferException
 import jakarta.persistence.*
 import java.util.Date
 
@@ -13,62 +14,60 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
     @Column
     var cryptoSymbol: String? = builder.cryptoSymbol
     @Column
-    var cryptoMounts: Float? = builder.cryptoMounts
+    var cryptoMounts: Double? = builder.cryptoMounts
     @Column
-    var cryptoPrice: Float? = builder.cryptoPrice
+    var cryptoPrice: Double? = builder.cryptoPrice
     @Column
-    var argsMounts: Float? = builder.argsMounts
-    @Column
-    var userName: String? = builder.userName
-    @Column
-    var userLastName: String? = builder.userLastName
+    var argsMounts: Double? = builder.argsMounts
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    var user: User<Any?>? = builder.user
     @Column
     var offerDate: Date? = builder.offerDate
     @Column
     var offerType: OfferType? = builder.offerType
+    @Column
+    var offerStatus : OfferStatus? = builder.offerStatus
 
     class UserOfferBuilder {
         var cryptoSymbol: String? = null
             private set
-        var cryptoMounts: Float? = null
+        var cryptoMounts: Double? = null
             private set
-        var cryptoPrice: Float? = null
+        var cryptoPrice: Double? = null
             private set
-        var argsMounts: Float? = null
+        var argsMounts: Double? = null
             private set
-        var userName: String? = null
-            private set
-        var userLastName: String? = null
+        var user: User<Any?>? = null
             private set
         var offerDate: Date? = null
             private set
         var offerType: OfferType? = null
             private set
+        var offerStatus: OfferStatus? = null
+            private set
+
 
         fun cryptoSymbol(cryptoSymbol: String) = apply {
             CryptoSymbolHelper.validateCriptoSymbol(cryptoSymbol)
             this.cryptoSymbol = cryptoSymbol
         }
 
-        fun cryptoMounts(cryptoMounts: Float) = apply {
+        fun cryptoMounts(cryptoMounts: Double) = apply {
+            require(cryptoMounts >= 0) { "The crypto mounts cannot be negative." }
             this.cryptoMounts = cryptoMounts
         }
 
-        fun cryptoPrice(cryptoPrice: Float) = apply {
-            require(isValidCryptoPrice(cryptoPrice)) { "The crypto price not valid." }
+        fun cryptoPrice(cryptoPrice: Double) = apply {
             this.cryptoPrice = cryptoPrice
         }
 
-        fun argsMounts(argsMounts: Float) = apply {
+        fun argsMounts(argsMounts: Double) = apply {
             this.argsMounts = argsMounts
         }
 
-        fun userName(userName: String) = apply {
-            this.userName = userName
-        }
-
-        fun userLastName(userLastName: String) = apply {
-            this.userLastName = userLastName
+        fun user(user: User<Any?>) = apply {
+            this.user = user
         }
 
         fun offerDate(offerDate: Date) = apply {
@@ -79,14 +78,54 @@ class UserOffer private constructor(builder: UserOfferBuilder) {
             this.offerType = offerType
         }
 
+        fun offerStatus(offerStatus: OfferStatus) = apply {
+            this.offerStatus = offerStatus
+        }
+
         fun build(): UserOffer {
             return UserOffer(this)
         }
 
-        private fun isValidCryptoPrice(cryptoPrice: Float?): Boolean {
-            return true // Buscarla en cache
-        }
+
 
     }
+
+    fun userName() : String {  return this.user!!.userName() }
+
+    fun userLastName(): String { return this.user!!.userLastName() }
+
+    fun user(): User<Any?> { return this.user!! }
+
+    fun isAvailable(): Boolean {return this.offerStatus!!.isAvailable()}
+
+    fun invalidate() {this.offerStatus = OfferStatus.UNVAILABLE}
+
+    fun isABuy(): Boolean { return this.offerType!!.isABuy()}
+
+
+    fun finishSuccessfullyOffer(transactionDuration: Long) {
+        this.offerStatus = OfferStatus.UNVAILABLE
+        this.user!!.userUpdateForFinishTransaction(transactionDuration)
+    }
+
+    fun isASell(): Boolean { return !isABuy()}
+
+    fun avalidate() {this.offerStatus = OfferStatus.AVAILABLE}
+
+    fun validateCancelTheOffer(userId: String) {
+        if (this.offerStatus == OfferStatus.UNVAILABLE ||
+            this.user!!.id == userId.toLong()                 // Cambiar ?
+        ){
+            throw UserOfferException("it cannot validate the cancellation of the offer")
+        }
+    }
+
+    fun totalAmount() : Double {return this.cryptoMounts!! * this.cryptoPrice!! }
+
+    fun argsMounts() : Double {return this.argsMounts!! }
+
+    fun cryptoSymbol() : String {return this.cryptoSymbol!! }
+
+    fun cryptoPrice() : Double {return this.cryptoPrice!! }
 
 }

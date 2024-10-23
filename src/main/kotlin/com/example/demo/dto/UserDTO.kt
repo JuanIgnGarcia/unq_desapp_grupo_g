@@ -1,4 +1,12 @@
 package com.example.demo.dto
 
-class UserDTO (val nameUser: String,val lastName: String,val points :Int) {
+import org.springframework.aot.generate.Generated
+
+@Generated
+class UserDTO(
+    val id: String,
+    val nameUser: String,
+    val lastName: String,
+    val reputation: Int
+) {
 }

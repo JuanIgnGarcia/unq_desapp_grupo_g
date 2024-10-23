@@ -4,7 +4,15 @@ import com.example.demo.exceptions.OfferTypeException
 
 enum class OfferType {
     BUY,
-    SELL
+    SELL;
+
+    fun isABuy(): Boolean {
+        return when (this) {
+            BUY  -> true
+            else -> false
+        }
+    }
+
 }
 
 object OfferTypeHelper {
