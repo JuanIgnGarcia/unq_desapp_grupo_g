@@ -11,6 +11,11 @@ val MOCKK_VERSION = "1.13.13"
 val SPRING_MOCKK_VERSION = "4.0.2"
 val REST_ASSURED = "5.5.0"
 
+val STARTER_CACHE = "3.1.5"
+val CACHE_API = "1.1.1"
+val EHCACHE = "3.10.8"
+
+
 plugins {
 	kotlin("jvm") version "1.9.25"
 	kotlin("plugin.spring") version "1.9.25"
@@ -51,6 +56,10 @@ dependencies {
 	implementation ("com.squareup.okhttp3:logging-interceptor:$LOGGING_INTERCEPTOR")
 	implementation ("com.squareup.okhttp3:okhttp:$OKHTTP")
 	implementation ("com.google.code.gson:gson:$GSON")
+
+	implementation("org.springframework.boot:spring-boot-starter-cache:$STARTER_CACHE")
+	implementation("javax.cache:cache-api:$CACHE_API")
+	implementation("org.ehcache:ehcache:$EHCACHE:jakarta")
 
 	testImplementation("io.mockk:mockk:$MOCKK_VERSION")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

@@ -6,6 +6,7 @@ import com.example.demo.model.CryptoSymbolHelper
 import com.example.demo.service.Proxys.ProxyBinance
 import org.springframework.stereotype.Service
 import org.springframework.aot.generate.Generated
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.transaction.annotation.Transactional
 
 @Generated
@@ -15,6 +16,7 @@ class CryptoService {
 
     private val proxyBinance = ProxyBinance()
 
+    @Cacheable("cryptosCache")
     fun allCryptos(): List<CryptoPrice> {
         try {
             val cryptoSymbols = CryptoSymbolHelper.cryptoSymbols()
@@ -27,6 +29,7 @@ class CryptoService {
 
     }
 
+    @Cacheable("cryptosCache")
     fun getCrypto(cryptoSymbol: String) : CryptoPrice {
 
         try {
