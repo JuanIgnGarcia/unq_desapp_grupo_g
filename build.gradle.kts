@@ -15,6 +15,7 @@ val STARTER_CACHE = "3.1.5"
 val CACHE_API = "1.1.1"
 val EHCACHE = "3.10.8"
 
+val JJWT = "0.9.1"
 
 plugins {
 	kotlin("jvm") version "1.9.25"
@@ -61,6 +62,9 @@ dependencies {
 	implementation("javax.cache:cache-api:$CACHE_API")
 	implementation("org.ehcache:ehcache:$EHCACHE:jakarta")
 
+	implementation("io.jsonwebtoken:jjwt:$JJWT")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+
 	testImplementation("io.mockk:mockk:$MOCKK_VERSION")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
@@ -72,7 +76,6 @@ dependencies {
 	runtimeOnly("org.postgresql:postgresql")
 
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
 }
 
 kotlin {
