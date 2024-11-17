@@ -67,6 +67,10 @@ dependencies {
 	implementation("javax.cache:cache-api:$CACHE_API")
 	implementation("org.ehcache:ehcache:$EHCACHE")
 
+	//Dependencia para metricas y endpoints de monitoreo
+	implementation("io.micrometer:micrometer-registry-prometheus")
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
+
 	// Dependencia para JSON
 	implementation("org.json:json:20090211")
 

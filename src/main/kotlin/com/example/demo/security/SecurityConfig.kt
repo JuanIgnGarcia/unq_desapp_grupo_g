@@ -24,7 +24,8 @@ class SecurityConfig(private val authService: AuthService) {
                         "/swagger-ui.html",
                         "/v3/api-docs/**",
                         "/h2-console/**",
-                        "/register"
+                        "/register",
+                        "/actuator/prometheus"
                     ).permitAll()
                     .anyRequest().authenticated()
             }
