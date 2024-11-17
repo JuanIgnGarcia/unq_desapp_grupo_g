@@ -53,7 +53,9 @@ dependencies {
 	// Dependencias para manejo de seguridad y JWT
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+	implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
 	implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
+
 
 	// Dependencias de Logging y GSON
 	implementation("com.squareup.okhttp3:logging-interceptor:$LOGGING_INTERCEPTOR")

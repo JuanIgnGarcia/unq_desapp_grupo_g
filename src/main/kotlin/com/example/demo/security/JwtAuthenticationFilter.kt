@@ -1,48 +1,50 @@
 package com.example.demo.security
 
+import io.jsonwebtoken.Jwts
 import jakarta.servlet.FilterChain
-import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
-import org.springframework.util.StringUtils
 import org.springframework.web.filter.OncePerRequestFilter
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
-import java.io.IOException
+import javax.crypto.SecretKey
 
-@Component
-class JwtAuthenticationFilter @Autowired constructor(
-    private val customUserDetailsService: CustomUserDetailsService,
-    private val jwtTokenProvider: JwtTokenProvider
-) : OncePerRequestFilter() {
+class JwtAuthenticationFilter(private val secretKey: SecretKey) : OncePerRequestFilter() {
 
-    private fun getTokenFromRequest(request: HttpServletRequest): String? {
-        val bearerToken = request.getHeader("Authorization")
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7)
-        }
-        return null
-    }
+    override fun doFilterInternal(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        filterChain: FilterChain
+    ) {
+        val token = resolveToken(request)
 
-    @Throws(ServletException::class, IOException::class)
-    override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
-        val token = getTokenFromRequest(request)
-        if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-            val email = jwtTokenProvider.getEmailFromJwt(token)
-            val userDetails = customUserDetailsService.loadUserByUsername(email)
-
-            val authenticationToken = UsernamePasswordAuthenticationToken(
-                userDetails,
-                null,
-                userDetails.authorities
-            )
-            authenticationToken.details = WebAuthenticationDetailsSource().buildDetails(request)
-            SecurityContextHolder.getContext().authentication = authenticationToken
+        if (token != null && validateToken(token)) {
+            val auth = getAuthentication(token)
+            SecurityContextHolder.getContext().authentication = auth
         }
 
         filterChain.doFilter(request, response)
+    }
+
+    private fun resolveToken(request: HttpServletRequest): String? {
+        val bearerToken = request.getHeader("Authorization")
+        return if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            bearerToken.substring(7)
+        } else null
+    }
+
+    private fun validateToken(token: String): Boolean {
+        try {
+            Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token)
+            return true
+        } catch (e: Exception) {
+            return false
+        }
+    }
+
+    private fun getAuthentication(token: String): UsernamePasswordAuthenticationToken {
+        val claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).body
+        val email = claims.subject
+        return UsernamePasswordAuthenticationToken(email, null, emptyList())
     }
 }

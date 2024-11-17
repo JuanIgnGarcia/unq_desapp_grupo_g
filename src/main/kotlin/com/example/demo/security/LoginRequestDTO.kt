@@ -1,3 +1,3 @@
 package com.example.demo.security
 
-data class LoginRequestDTO(val username: String, val password: String)
+data class LoginRequestDTO(val mail: String, val password: String)
