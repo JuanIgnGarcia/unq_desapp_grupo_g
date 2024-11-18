@@ -13,6 +13,8 @@ val STARTER_CACHE = "3.1.5"
 val CACHE_API = "1.1.1"
 val EHCACHE = "3.10.8"
 
+val ARCHUNIT_VERSION = "1.3.0"
+
 plugins {
 	kotlin("jvm") version "1.9.25"
 	kotlin("plugin.spring") version "1.9.25"
@@ -92,6 +94,9 @@ dependencies {
 	runtimeOnly("org.postgresql:postgresql")
 
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+	//Dependencias de ArchUnit
+	testImplementation("com.tngtech.archunit:archunit-junit5:$ARCHUNIT_VERSION")
 }
 
 kotlin {
