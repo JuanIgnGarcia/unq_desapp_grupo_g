@@ -14,11 +14,11 @@ import org.springframework.context.annotation.Profile
 @Generated
 @Component
 @Profile("test")
-class DataLoaderTest(private val userService: UserService, private val userOfferService : UserOfferService, private val cryptoService:CryptoService, private val transactionService : TransactionService) : CommandLineRunner {
+class DataLoaderTest(private val userService: UserService, private val userOfferService : UserOfferService, private val cryptoService:CryptoService) : CommandLineRunner {
 
 
     override fun run(vararg args: String?) {
-        // Cargar datos iniciales
+
         val user1 = User.UserBuilder()
                 .name("Marcos")
                 .lastName("Dias")
@@ -71,8 +71,5 @@ class DataLoaderTest(private val userService: UserService, private val userOffer
         userOfferService.publishOffer(offer1)
         userOfferService.publishOffer(offer2)
         userOfferService.publishOffer(offer3)
-        //transactionService.createTransaction("2","1")
-
-
     }
 }

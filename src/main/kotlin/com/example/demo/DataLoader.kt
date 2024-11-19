@@ -23,56 +23,55 @@ class DataLoader(private val userService: UserService,
 
 
     override fun run(vararg args: String?) {
+
         // Cargar datos iniciales
-        val user1 = User.UserBuilder()
-                .name("Marcos")
-                .lastName("Dias")
-                .email("Marcos.dias@example.com")
-                .address("123 Main Street")
-                .password("StrongPassword1!")
-                .cvuMercadoPago("1234567890123456789012")
-                .cryptoAddress("12345678")
-                .point(0)
-                .mountCompletedTransactions(0)
-                .build()
-        val user2 = User.UserBuilder()
-                .name("Joaquin")
-                .lastName("Villanueva")
-                .email("Joaquin.Villanueva@example.com")
-                .address("123 Main Street")
-                .password("StrongPassword1!")
-                .cvuMercadoPago("1111111111111111111111")
+        val userTest1 = User.UserBuilder()
+                .name("Marcelo")
+                .lastName("Jorge")
+                .email("Marcelo.Jorge@example.com")
+                .address("234 Second St")
+                .password("ResponsabilidaD1!")
+                .cvuMercadoPago("2222222222222222222222")
                 .cryptoAddress("11111111")
                 .point(0)
                 .mountCompletedTransactions(0)
                 .build()
+        val userTest2 = User.UserBuilder()
+                .name("Joaquin")
+                .lastName("Villanueva")
+                .email("Joaquin.Villanueva@example.com")
+                .address("567 Big Bank")
+                .password("ContraproducentE1!")
+                .cvuMercadoPago("3333333333333333333333")
+                .cryptoAddress("87654321")
+                .point(0)
+                .mountCompletedTransactions(0)
+                .build()
 
-        //ofertas
-
-        val offer1 = UserOfferRequest( cryptoSymbol = "ALICEUSDT",
-                cryptoMounts = 10.0,
+        val offerTest1 = UserOfferRequest( cryptoSymbol = "ALICEUSDT",
+                cryptoMounts = 20.0,
                 cryptoPrice = cryptoService.getCrypto("ALICEUSDT").price.toDouble(),
                 userId= "1",
                 offerType = "SELL")
 
-        val offer2 = UserOfferRequest( cryptoSymbol = "AAVEUSDT",
-                cryptoMounts = 10.0,
+        val offerTest2 = UserOfferRequest( cryptoSymbol = "AAVEUSDT",
+                cryptoMounts = 20.0,
                 cryptoPrice = cryptoService.getCrypto("AAVEUSDT").price.toDouble(),
                 userId= "1",
                 offerType = "BUY")
 
-        val offer3 = UserOfferRequest( cryptoSymbol = "NEOUSDT",
+        val offerTest3 = UserOfferRequest( cryptoSymbol = "NEOUSDT",
                 cryptoMounts = 20.0,
                 cryptoPrice =cryptoService.getCrypto("NEOUSDT").price.toDouble(),
                 userId= "2",
                 offerType = "BUY")
 
-        //transaction
-        userService.createUser(user1)
-        userService.createUser(user2)
-        userOfferService.publishOffer(offer1)
-        userOfferService.publishOffer(offer2)
-        userOfferService.publishOffer(offer3)
+
+        userService.createUser(userTest1)
+        userService.createUser(userTest2)
+        userOfferService.publishOffer(offerTest1)
+        userOfferService.publishOffer(offerTest2)
+        userOfferService.publishOffer(offerTest3)
         transactionService.createTransaction("2","1")
 
 
