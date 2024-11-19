@@ -149,6 +149,8 @@ sonar {
 		property("sonar.host.url", "https://sonarcloud.io/")
 		property("sonar.organization", "juanigngarcia")
 		property("sonar.projectKey", "JuanIgnGarcia_unq_desapp_grupo_g")
+		property("sonar.inclusions", "src/main/kotlin/com/example/demo/model/**")
 	}
 }
+
 
