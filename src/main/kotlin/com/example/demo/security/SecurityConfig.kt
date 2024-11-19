@@ -25,6 +25,8 @@ class SecurityConfig(private val authService: AuthService) {
                         "/v3/api-docs/**",
                         "/h2-console/**",
                         "/register",
+                        "/actuator/**",
+                        "/actuator/metrics",
                         "/actuator/prometheus"
                     ).permitAll()
                     .anyRequest().authenticated()
