@@ -31,6 +31,14 @@ class User<Date> private constructor(builder: UserBuilder) {
     @Column
     var mountCompletedTransactions: Int = builder.mountCompletedTransactions ?: 0
 
+    @ManyToMany
+    @JoinTable(
+        name = "user_role",
+        joinColumns = [JoinColumn(name = "user_id")],
+        inverseJoinColumns = [JoinColumn(name = "role_id")]
+    )
+    val roles: List<Role> = ArrayList()
+
 
     class UserBuilder {
         var id: Long? = null
@@ -155,5 +163,4 @@ class User<Date> private constructor(builder: UserBuilder) {
             0
         }
     }
-
 }

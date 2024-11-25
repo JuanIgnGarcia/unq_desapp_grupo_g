@@ -13,11 +13,13 @@ import com.example.demo.request.UserOfferRequest
 import org.springframework.aot.generate.Generated
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 import kotlin.math.abs
 
 @Generated
 @Service
+@Transactional
 class UserOfferService {
 
     @Autowired
